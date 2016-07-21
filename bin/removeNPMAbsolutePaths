@@ -3,7 +3,16 @@
 'use strict';
 
 var removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths'),
-	args = process.argv.slice(2),
-	folder = args[0];
+  args = process.argv.slice(2),
+  folder = args[0],
+  opts = {
+    force: false
+  };
 
-removeNPMAbsolutePaths(folder);
+  for (var arg in args.slice(1)) {
+    if (arg === '--force') {
+      opts.force = true;
+    }
+  }
+
+removeNPMAbsolutePaths(folder, opts);

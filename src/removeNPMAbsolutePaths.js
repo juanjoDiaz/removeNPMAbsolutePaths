@@ -3,7 +3,7 @@ var path = require('path');
 
 module.exports = removeNPMAbsolutePaths;
 
-function removeNPMAbsolutePaths(dir) {
+function removeNPMAbsolutePaths(dir, opts) {
   fs.readdir(dir, function (err, files) {
     if (err) return console.log(err);
 
@@ -20,16 +20,20 @@ function removeNPMAbsolutePaths(dir) {
             fs.readFile(filePath, 'utf8', function (err, data) {
               if (err) return console.log(err);
 
+              var writeFile = false;
               var obj = JSON.parse(data);
               for (var prop in obj) {
                 if (prop[0] === '_') {
                   delete obj[prop];
+                  writeFile = true;
                 }
               }
               
-              fs.writeFile(filePath, JSON.stringify(obj, null, '  '), function (err) {
-                if (err) return console.log(err);
-              });
+              if (writeFile || opts.force) {
+                fs.writeFile(filePath, JSON.stringify(obj, null, '  '), function (err) {
+                  if (err) return console.log(err);
+                });
+              }
             });
           }
         }
