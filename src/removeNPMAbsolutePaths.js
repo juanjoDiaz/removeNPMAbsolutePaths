@@ -14,7 +14,7 @@ function removeNPMAbsolutePaths(dir, opts) {
         if (err) return console.log(err);
 
         if (stats.isDirectory()) {
-          removeNPMAbsolutePaths(filePath);
+          removeNPMAbsolutePaths(filePath, opts);
         } else {
           if (fileName === 'package.json') {
             fs.readFile(filePath, 'utf8', function (err, data) {
@@ -28,7 +28,7 @@ function removeNPMAbsolutePaths(dir, opts) {
                   writeFile = true;
                 }
               }
-              
+
               if (writeFile || opts.force) {
                 fs.writeFile(filePath, JSON.stringify(obj, null, '  '), function (err) {
                   if (err) return console.log(err);
