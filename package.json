@@ -1,7 +1,8 @@
 {
   "name": "removeNPMAbsolutePaths",
-  "version": "0.0.2",
-  "description": "Remove the fields containing local aboslute paths created by NPM",  "keywords": [
+  "version": "0.0.3",
+  "description": "Remove the fields containing local aboslute paths created by NPM",
+  "keywords": [
     "npm",
     "modules"
   ],
@@ -14,13 +15,13 @@
     "type": "git",
     "url": "git://github.com/juanjoDiaz/removeNPMAbsolutePaths"
   },
-  "bugs": { 
-    "url" : "https://github.com/removeNPMAbsolutePaths/issues",
-    "email" : "juanjo.diazmo@gmail.com"
+  "bugs": {
+    "url": "https://github.com/removeNPMAbsolutePaths/issues",
+    "email": "juanjo.diazmo@gmail.com"
   },
   "license": "MIT",
   "preferGlobal": "true",
   "bin": {
-    "removeNPMAbsolutePaths" : "bin/removeNPMAbsolutePaths"
+    "removeNPMAbsolutePaths": "bin/removeNPMAbsolutePaths"
   }
 }
