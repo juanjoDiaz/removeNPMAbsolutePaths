@@ -21,7 +21,14 @@ function removeNPMAbsolutePaths(dir, opts) {
               if (err) return console.log(err);
 
               var writeFile = false;
-              var obj = JSON.parse(data);
+              var obj;
+              try {
+                obj = JSON.parse(data);
+              } catch (e) {
+                // ignore malformed package.json files.
+                return;
+              }
+
               for (var prop in obj) {
                 if (prop[0] === '_') {
                   delete obj[prop];
