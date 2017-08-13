@@ -8,7 +8,9 @@
   ],
   "main": "src/removeNPMAbsolutePaths.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint bin/removeNPMAbsolutePaths src test",
+    "test": "mocha test",
+    "test-with-coverage": "nyc --reporter=text mocha test"
   },
   "author": "Juanjo Diaz <juanjo.diazmo@gmail.com>",
   "repository": {
@@ -23,5 +25,19 @@
   "preferGlobal": "true",
   "bin": {
     "removeNPMAbsolutePaths": "bin/removeNPMAbsolutePaths"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^4.4.1",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-import": "^2.7.0",
+    "mocha": "^3.5.0",
+    "nyc": "^11.1.0",
+    "sinon": "^3.2.0",
+    "sinon-chai": "^2.12.0"
+  },
+  "engines": {
+    "node": ">=4.0.0"
   }
 }

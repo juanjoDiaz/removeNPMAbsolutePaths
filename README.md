@@ -21,9 +21,17 @@ removeNPMAbsolutePaths "<PROJECT_FOLDER>"
 ```
 or use it from whithin your code
 ```Javascript
-var removeNPMAbsolutePaths = require('mkLib');
-removeNPMAbsolutePaths("<PROJECT_FOLDER>");
+var removeNPMAbsolutePaths = require('removeNPMAbsolutePaths');
+removeNPMAbsolutePaths("<PROJECT_FOLDER>")
+  .then(results => results.forEach(result => {
+    // Print only information about files that couldn't be processed
+    if (!result.success) {
+      console.log(result.err.message);
+    }
+  }))
+  .catch(err => console.log(err.message));
 ```
+Using `removeNPMAbsolutePaths` from within Javascript returns a promise containing information about all the folders and files processed and whether they where successfully processed and rewritten or not.
 
 ### Options
 removeNPMAbsolutePaths can be configured using tags. Tags can be added to the command line commands:

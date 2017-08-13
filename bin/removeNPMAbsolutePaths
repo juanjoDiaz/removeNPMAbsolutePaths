@@ -1,18 +1,29 @@
 #!/usr/bin/env node
 
-'use strict';
+/* eslint-disable no-console */
 
-var removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths'),
-  args = process.argv.slice(2),
-  folder = args[0],
-  opts = {
-    force: false
-  };
+const removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
 
-  for (var arg in args.slice(1)) {
-    if (arg === '--force') {
-      opts.force = true;
-    }
+if (process.argv < 1) {
+  console.log('Invalid argument.', 'The first argument should be the path to a directory or a package.json file.');
+}
+
+const args = process.argv.slice(2);
+const folder = args[0];
+const opts = {
+  force: false,
+};
+
+args.slice(1).forEach((arg) => {
+  if (arg === '--force') {
+    opts.force = true;
   }
+});
 
-removeNPMAbsolutePaths(folder, opts);
+removeNPMAbsolutePaths(folder, opts)
+  .then(results => results.forEach((result) => {
+    if (!result.success) {
+      console.log(result.err.message);
+    }
+  }))
+  .catch(err => console.log(err.message));
