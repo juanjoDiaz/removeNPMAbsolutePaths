@@ -1,6 +1,8 @@
 /* eslint-env node, mocha */
 /* eslint-disable prefer-arrow-callback, func-names, no-unused-expressions */
 
+'use strict';
+
 const fs = require('fs');
 const chai = require('chai');
 const sinon = require('sinon');

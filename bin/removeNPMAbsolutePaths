@@ -2,6 +2,8 @@
 
 /* eslint-disable no-console */
 
+'use strict';
+
 const removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
 
 if (process.argv < 1) {

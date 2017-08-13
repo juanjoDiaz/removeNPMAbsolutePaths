@@ -1,3 +1,5 @@
+'use strict';
+
 const all = [
   {
     errno: -2,
