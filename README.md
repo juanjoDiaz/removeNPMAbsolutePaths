@@ -49,8 +49,5 @@ removeNPMAbsolutePaths("<PROJECT_FOLDER>", { tag1: true, tag2: false});
 #### force
 removeNPMAbsolutePaths only rewrite to disk the files that it modifies. Passing the `--force` tag will rewritte all the files even if they haven't been modfied. This might be useful if you want all the package.json files to have always exactly the same styling for example for hashing.
 
-## Version
-0.0.3
-
 ## License
 MIT

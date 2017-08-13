@@ -1,6 +1,6 @@
 {
   "name": "removeNPMAbsolutePaths",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Remove the fields containing local aboslute paths created by NPM",
   "keywords": [
     "npm",
