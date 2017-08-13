@@ -1,3 +1,6 @@
+[![build status](https://travis-ci.org/juanjoDiaz/removeNPMAbsolutePaths.svg?branch=master)](https://travis-ci.org/juanjoDiaz/removeNPMAbsolutePaths?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/juanjoDiaz/removeNPMAbsolutePaths/badge.svg?branch=master)](https://coveralls.io/github/juanjoDiaz/removeNPMAbsolutePaths?branch=master)
+
 # removeNPMAbsolutePaths
 
 removeNPMAbsolutePaths is a small utility to remove the fields that npm adds to the modules in `node_modules` containing local aboslute paths.
