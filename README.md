@@ -1,5 +1,7 @@
-[![build status](https://travis-ci.org/juanjoDiaz/removeNPMAbsolutePaths.svg?branch=master)](https://travis-ci.org/juanjoDiaz/removeNPMAbsolutePaths?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/juanjoDiaz/removeNPMAbsolutePaths/badge.svg?branch=master)](https://coveralls.io/github/juanjoDiaz/removeNPMAbsolutePaths?branch=master)
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
+[![Downloads][downloads-image]][downloads-url]
 
 # removeNPMAbsolutePaths
 
@@ -51,3 +53,13 @@ removeNPMAbsolutePaths only rewrite to disk the files that it modifies. Passing 
 
 ## License
 MIT
+
+
+[npm-image]: https://img.shields.io/npm/v/removeNPMAbsolutePaths.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/removeNPMAbsolutePaths
+[travis-image]: https://img.shields.io/travis/juanjoDiaz/removeNPMAbsolutePaths/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/juanjoDiaz/removeNPMAbsolutePaths
+[coveralls-image]: https://img.shields.io/coveralls/juanjoDiaz/removeNPMAbsolutePaths/master.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/github/juanjoDiaz/removeNPMAbsolutePaths?branch=master
+[downloads-image]: https://img.shields.io/npm/dm/removeNPMAbsolutePaths.svg?style=flat-square
+[downloads-url]: https://www.npmjs.com/package/removeNPMAbsolutePaths
