@@ -80,21 +80,19 @@ function processDir(dirPath, opts) {
       resolve(files);
     });
   })
-    .then(files => Promise.all(
-      files.map((fileName) => {
-        const filePath = path.join(dirPath, fileName);
+    .then(files => Promise.all(files.map((fileName) => {
+      const filePath = path.join(dirPath, fileName);
 
-        return getStats(filePath)
-          .then((stats) => {
-            if (stats.isDirectory()) {
-              return processDir(filePath, opts);
-            } else if (fileName === 'package.json') {
-              return processFile(filePath, opts);
-            }
-            return undefined;
-          });
-      }),
-    ))
+      return getStats(filePath)
+        .then((stats) => {
+          if (stats.isDirectory()) {
+            return processDir(filePath, opts);
+          } else if (fileName === 'package.json') {
+            return processFile(filePath, opts);
+          }
+          return undefined;
+        });
+    })))
     .then(results => results.reduce((arr, value) => {
       if (!value) {
         return arr;
