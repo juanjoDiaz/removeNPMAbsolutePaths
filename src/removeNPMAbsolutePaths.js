@@ -65,17 +65,8 @@ function processFile(filePath, opts) {
 
       return { rewritten: false };
     })
-    .then(
-      r => ({
-        filePath,
-        rewritten: r.rewritten,
-        success: true }),
-      err => ({
-        filePath,
-        err,
-        success: false,
-      }),
-    );
+    .then(r => ({ filePath, rewritten: r.rewritten, success: true }),
+      err => ({ filePath, err, success: false }));
 }
 
 function processDir(dirPath, opts) {
