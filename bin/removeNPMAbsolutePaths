@@ -19,6 +19,12 @@ const opts = {
 args.slice(1).forEach((arg) => {
   if (arg === '--force') {
     opts.force = true;
+  } else if (arg === '--specific') {
+    opts.removeSpecific = true;
+  } else {
+    // this assumes that all other args passed are keys to remove;
+    // consider using minimist or similar tool for arguments parsing ;)
+    opts[arg] = true;
   }
 });
 

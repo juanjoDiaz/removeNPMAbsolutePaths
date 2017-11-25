@@ -43,12 +43,22 @@ function processFile(filePath, opts) {
         throw createError(`Malformed package.json file at "${filePath}"`, err);
       }
 
-      Object.keys(obj).forEach((key) => {
-        if (key[0] === '_') {
-          delete obj[key];
-          writeFile = true;
-        }
-      });
+      if (opts.removeSpecific) {
+        // TODO fix coverage
+        Object.keys(opts).forEach((keyToDel) => {
+          if (keyToDel !== 'force' && keyToDel !== 'specific') {
+            delete obj[keyToDel];
+            writeFile = true;
+          }
+        });
+      } else {
+        Object.keys(obj).forEach((key) => {
+          if (key[0] === '_') {
+            delete obj[key];
+            writeFile = true;
+          }
+        });
+      }
 
       if (writeFile || opts.force) {
         return new Promise((resolve, reject) => {
