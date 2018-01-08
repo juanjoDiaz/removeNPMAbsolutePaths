@@ -140,8 +140,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(results).to.be.an('array').that.have.lengthOf(3);
             const fileResults = results.find(result => result.filePath === filePath);
             expect(fileResults).to.include({ success: true, rewritten: true });
-            expect(fileResults.err)
-              .to.not.exist;
+            expect(fileResults.err).to.not.exist;
             expect(stat).to.have.been.called;
             expect(readdir).to.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
@@ -149,12 +148,11 @@ describe('removeNPMAbsolutePaths.js', function () {
           });
       });
 
-      it('rewrite pacakge.json, but only specific fields', function () {
-        const dirPath = `${__dirname}/data/specific_fields`;
+      it('rewrite pacakge.json, but only remove specific fields', function () {
+        const dirPath = `${__dirname}/data/underscore_fields`;
         const filePath = `${dirPath}/module/package.json`;
         const opts = {
-          userSpecifiedKeys: true,
-          keys: ['_inBundle', '_where'],
+          fields: ['_inBundle', '_where'],
         };
         const promise = removeNPMAbsolutePaths(dirPath, opts);
         return expect(promise).be.fulfilled
@@ -162,8 +160,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(results).to.be.an('array').that.have.lengthOf(3);
             const fileResults = results.find(result => result.filePath === filePath);
             expect(fileResults).to.include({ success: true, rewritten: true });
-            expect(fileResults.err)
-              .to.not.exist;
+            expect(fileResults.err).to.not.exist;
             expect(stat).to.have.been.called;
             expect(readdir).to.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
@@ -180,8 +177,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(results).to.be.an('array').that.have.lengthOf(3);
             const fileResults = results.find(result => result.filePath === filePath);
             expect(fileResults).to.include({ success: true, rewritten: false });
-            expect(fileResults.err)
-              .to.not.exist;
+            expect(fileResults.err).to.not.exist;
             expect(stat).to.have.been.called;
             expect(readdir).to.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
@@ -198,8 +194,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(results).to.be.an('array').that.have.lengthOf(3);
             const fileResults = results.find(result => result.filePath === filePath);
             expect(fileResults).to.include({ success: true, rewritten: true });
-            expect(fileResults.err)
-              .to.not.exist;
+            expect(fileResults.err).to.not.exist;
             expect(stat).to.have.been.called;
             expect(readdir).to.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);

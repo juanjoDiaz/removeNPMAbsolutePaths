@@ -14,17 +14,25 @@ const args = process.argv.slice(2);
 const folder = args[0];
 const opts = {
   force: false,
-  userSpecifiedKeys: false,
-  keys: [],
 };
 
+let inFields = false;
+
 args.slice(1).forEach((arg) => {
+  if (arg[0] === '-' && arg[1] === '-') {
+    // the only arguments that do not start with dashes are specific fields to
+    // be removed and should only come after the --fields argument.  Any other
+    // time we see --, we are not processing fields any more
+    inFields = false;
+  }
+
   if (arg === '--force') {
     opts.force = true;
-  } else if (arg === '--keys') {
-    opts.userSpecifiedKeys = true;
-  } else {
-    opts.keys.push(arg);
+  } else if (arg === '--fields') {
+    inFields = true;
+    opts.fields = [];
+  } else if (opts.fields !== undefined && inFields) {
+    opts.fields.push(arg);
   }
 });
 
