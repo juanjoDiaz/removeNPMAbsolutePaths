@@ -51,6 +51,18 @@ removeNPMAbsolutePaths("<PROJECT_FOLDER>", { tag1: true, tag2: false});
 #### force
 removeNPMAbsolutePaths only rewrite to disk the files that it modifies. Passing the `--force` tag will rewritte all the files even if they haven't been modfied. This might be useful if you want all the package.json files to have always exactly the same styling for example for hashing.
 
+#### fields
+removeNPMAbsolutePaths by default removes all fields starting with `_`. Passing the `--fields` tag followed by a list of field names you want removed will cause it to remove only those ones you list.  This might be useful if only some of the fields in package.json are bothering you.
+
+```Javascript
+removeNPMAbsolutePaths "<PROJECT_FOLDER>" --fields _where _args
+```
+
+```Javascript
+removeNPMAbsolutePaths("<PROJECT_FOLDER>", { tag1: true, fields: ["_where", "_args"]});
+```
+
+
 ## License
 MIT
 
