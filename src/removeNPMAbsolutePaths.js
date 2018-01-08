@@ -44,7 +44,12 @@ function processFile(filePath, opts) {
       }
 
       Object.keys(obj).forEach((key) => {
-        if (key[0] === '_') {
+        if (!opts.userSpecifiedKeys) {
+          if (key[0] === '_') {
+            delete obj[key];
+            writeFile = true;
+          }
+        } else if (opts.keys.indexOf(key) !== -1) {
           delete obj[key];
           writeFile = true;
         }

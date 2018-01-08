@@ -14,11 +14,17 @@ const args = process.argv.slice(2);
 const folder = args[0];
 const opts = {
   force: false,
+  userSpecifiedKeys: false,
+  keys: [],
 };
 
 args.slice(1).forEach((arg) => {
   if (arg === '--force') {
     opts.force = true;
+  } else if (arg === '--keys') {
+    opts.userSpecifiedKeys = true;
+  } else {
+    opts.keys.push(arg);
   }
 });
 

@@ -149,6 +149,28 @@ describe('removeNPMAbsolutePaths.js', function () {
           });
       });
 
+      it('rewrite pacakge.json, but only specific fields', function () {
+        const dirPath = `${__dirname}/data/specific_fields`;
+        const filePath = `${dirPath}/module/package.json`;
+        const opts = {
+          userSpecifiedKeys: true,
+          keys: ['_inBundle', '_where'],
+        };
+        const promise = removeNPMAbsolutePaths(dirPath, opts);
+        return expect(promise).be.fulfilled
+          .then((results) => {
+            expect(results).to.be.an('array').that.have.lengthOf(3);
+            const fileResults = results.find(result => result.filePath === filePath);
+            expect(fileResults).to.include({ success: true, rewritten: true });
+            expect(fileResults.err)
+              .to.not.exist;
+            expect(stat).to.have.been.called;
+            expect(readdir).to.have.been.called;
+            expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
+            expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+          });
+      });
+
       it('doesn\'t rewrite pacakge.json if doesnn\'t contain _ fields and force flag isn\'t present', function () {
         const dirPath = `${__dirname}/data/no_underscore_fields`;
         const filePath = `${dirPath}/module/package.json`;
