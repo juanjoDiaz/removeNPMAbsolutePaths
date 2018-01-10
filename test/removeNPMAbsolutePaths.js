@@ -148,6 +148,31 @@ describe('removeNPMAbsolutePaths.js', function () {
           });
       });
 
+      it('rewrite only user-specified fields in package.json', function () {
+        const dirPath = `${__dirname}/data/underscore_fields`;
+        const filePath = `${dirPath}/module/package.json`;
+        const opts = {
+          fields: ['_inBundle', '_where'],
+        };
+        const promise = removeNPMAbsolutePaths(dirPath, opts);
+        return expect(promise).be.fulfilled
+          .then((results) => {
+            expect(results).to.be.an('array').that.have.lengthOf(3);
+            const fileResults = results.find(result => result.filePath === filePath);
+            expect(fileResults).to.include({ success: true, rewritten: true });
+            expect(fileResults.err).to.not.exist;
+            expect(stat).to.have.been.called;
+            expect(readdir).to.have.been.called;
+            expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
+            expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+            const packageJson = JSON.parse(writeFile.getCall(0).args[1]);
+            expect(packageJson).to.not.have.property('_inBundle');
+            expect(packageJson).to.not.have.property('_where');
+            expect(packageJson).to.have.property('_from');
+            expect(packageJson).to.have.property('_shasum');
+          });
+      });
+
       it('doesn\'t rewrite pacakge.json if doesn\'t contain _ fields and force flag isn\'t present', function () {
         const dirPath = `${__dirname}/data/no_underscore_fields`;
         const filePath = `${dirPath}/module/package.json`;
@@ -404,33 +429,5 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
     });
 
-    it('checks that value of file contents do not contain specific removed fields', function () {
-      writeFile.restore();
-      writeFile = sinon.stub(fs, 'writeFile').callsFake((path, fileContents, cb) => {
-        const packageJson = JSON.parse(fileContents);
-        expect(packageJson).to.not.have.property('_inBundle');
-        expect(packageJson).to.not.have.property('_where');
-        expect(packageJson).to.have.property('_from');
-        return cb();
-      });
-
-      const dirPath = `${__dirname}/data/underscore_fields`;
-      const filePath = `${dirPath}/module/package.json`;
-      const opts = {
-        fields: ['_inBundle', '_where'],
-      };
-      const promise = removeNPMAbsolutePaths(dirPath, opts);
-      return expect(promise).be.fulfilled
-        .then((results) => {
-          expect(results).to.be.an('array').that.have.lengthOf(3);
-          const fileResults = results.find(result => result.filePath === filePath);
-          expect(fileResults).to.include({ success: true, rewritten: true });
-          expect(fileResults.err).to.not.exist;
-          expect(stat).to.have.been.called;
-          expect(readdir).to.have.been.called;
-          expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
-          expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
-        });
-    });
   });
 });
