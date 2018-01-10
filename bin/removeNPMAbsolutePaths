@@ -16,11 +16,29 @@ const opts = {
   force: false,
 };
 
-args.slice(1).forEach((arg) => {
-  if (arg === '--force') {
-    opts.force = true;
+const ignoredOptions = [];
+
+for (let i = 0; i < args.length; i += 1) {
+  const arg = args[i];
+  switch (arg) {
+    case '--force':
+      opts.force = true;
+      break;
+    case '--fields':
+      opts.fields = opts.fields || [];
+      while (args[i + 1] && args[i + 1].slice(0, 2) !== '--') {
+        opts.fields.push(args[i += 1]);
+      }
+      break;
+    default:
+      ignoredOptions.push(arg);
+      break;
   }
-});
+}
+
+if (ignoredOptions.length) {
+  console.warn(`The following options are unknown and will be ignored:\n${ignoredOptions.join('\n')}`);
+}
 
 removeNPMAbsolutePaths(folder, opts)
   .then(results => results.forEach((result) => {
