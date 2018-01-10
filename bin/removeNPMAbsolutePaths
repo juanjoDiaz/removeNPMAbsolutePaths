@@ -16,25 +16,30 @@ const opts = {
   force: false,
 };
 
-let inFields = false;
+let argWarning = [];
 
-args.slice(1).forEach((arg) => {
-  if (arg[0] === '-' && arg[1] === '-') {
-    // the only arguments that do not start with dashes are specific fields to
-    // be removed and should only come after the --fields argument.  Any other
-    // time we see --, we are not processing fields any more
-    inFields = false;
+for (let i = 0; i < args.length; i += 1) {
+  const arg = args[i];
+  switch (arg) {
+    case '--force':
+      opts.force = true;
+      break;
+    case '--fields':
+      opts.fields = opts.fields || [];
+      while (args[i + 1] && args[i + 1].slice(0, 2) !== '--') {
+        opts.fields.push(args[i += 1]);
+      }
+      break;
+    default:
+      argWarning = ['Invalid argument.', 'Extra arguments are being ignored'];
+      break;
   }
+}
 
-  if (arg === '--force') {
-    opts.force = true;
-  } else if (arg === '--fields') {
-    inFields = true;
-    opts.fields = [];
-  } else if (opts.fields !== undefined && inFields) {
-    opts.fields.push(arg);
-  }
-});
+if (argWarning.length) {
+  console.warn.apply(null, argWarning);
+}
+
 
 removeNPMAbsolutePaths(folder, opts)
   .then(results => results.forEach((result) => {
