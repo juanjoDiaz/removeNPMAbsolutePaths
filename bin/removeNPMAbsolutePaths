@@ -16,7 +16,7 @@ const opts = {
   force: false,
 };
 
-let argWarning = [];
+const ignoredOptions = [];
 
 for (let i = 0; i < args.length; i += 1) {
   const arg = args[i];
@@ -31,15 +31,14 @@ for (let i = 0; i < args.length; i += 1) {
       }
       break;
     default:
-      argWarning = ['Invalid argument.', 'Extra arguments are being ignored'];
+      ignoredOptions.push(arg);
       break;
   }
 }
 
-if (argWarning.length) {
-  console.warn.apply(null, argWarning);
+if (ignoredOptions.length) {
+  console.warn(`The following options are unknown and will be ignored:\n${ignoredOptions.join('\n')}`);
 }
-
 
 removeNPMAbsolutePaths(folder, opts)
   .then(results => results.forEach((result) => {
