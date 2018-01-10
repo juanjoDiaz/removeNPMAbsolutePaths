@@ -428,6 +428,5 @@ describe('removeNPMAbsolutePaths.js', function () {
           expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
         });
     });
-
   });
 });
