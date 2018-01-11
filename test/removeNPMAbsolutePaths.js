@@ -131,7 +131,7 @@ describe('removeNPMAbsolutePaths.js', function () {
     });
 
     describe('is valid directory path', function () {
-      it('rewrite pacakge.json if contains _ fields', function () {
+      it('rewrite pacakge.json if contains _fields', function () {
         const dirPath = `${__dirname}/data/underscore_fields`;
         const filePath = `${dirPath}/module/package.json`;
         const promise = removeNPMAbsolutePaths(dirPath);
@@ -145,6 +145,8 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(readdir).to.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
             expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+            const packageJson = JSON.parse(writeFile.getCall(0).args[1]);
+            expect(Object.keys(packageJson).find(key => key[0] === '_')).to.not.exist;
           });
       });
 
@@ -186,11 +188,11 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(stat).to.have.been.called;
             expect(readdir).to.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
-            expect(writeFile).to.have.not.been.called;
+            expect(writeFile).to.not.have.been.called;
           });
       });
 
-      it('rewrite pacakge.json if doesn\'t contain _ fields and force flag is present', function () {
+      it('rewrite pacakge.json if doesn\'t contain _fields and force flag is present', function () {
         const dirPath = `${__dirname}/data/no_underscore_fields`;
         const filePath = `${dirPath}/module/package.json`;
         const promise = removeNPMAbsolutePaths(dirPath, { force: true });
@@ -230,7 +232,7 @@ describe('removeNPMAbsolutePaths.js', function () {
     });
 
     describe('is valid file path', function () {
-      it('rewrite file if contains _ fields', function () {
+      it('rewrite file if contains _fields', function () {
         const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
@@ -244,10 +246,12 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(readdir).to.not.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
             expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+            const packageJson = JSON.parse(writeFile.getCall(0).args[1]);
+            expect(Object.keys(packageJson).find(key => key[0] === '_')).to.not.exist;
           });
       });
 
-      it('doesn\'t rewrite file if doesn\'t contain _ fields and force flag isn\'t present', function () {
+      it('doesn\'t rewrite file if doesn\'t contain _fields and force flag isn\'t present', function () {
         const filePath = `${__dirname}/data/no_underscore_fields/module/package.json`;
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
@@ -260,11 +264,11 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
             expect(readdir).to.not.have.been.called;
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
-            expect(writeFile).to.have.not.been.called;
+            expect(writeFile).to.not.have.been.called;
           });
       });
 
-      it('rewrite file if doesn\'t contain _ fields and force flag is present', function () {
+      it('rewrite file if doesn\'t contain _fields and force flag is present', function () {
         const filePath = `${__dirname}/data/no_underscore_fields/module/package.json`;
         const promise = removeNPMAbsolutePaths(filePath, { force: true });
         return expect(promise).be.fulfilled
@@ -327,7 +331,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           expect(stat).to.have.been.calledOnce.and.calledWith(dirPath);
           expect(readdir).to.have.been.calledOnce.and.calledWith(dirPath);
           expect(readFile).to.not.have.been.called;
-          expect(writeFile).to.have.not.been.called;
+          expect(writeFile).to.not.have.been.called;
         });
     });
   });
@@ -376,7 +380,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
           expect(readdir).to.not.have.been.called;
           expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
-          expect(writeFile).to.have.not.been.called;
+          expect(writeFile).to.not.have.been.called;
         });
     });
   });
