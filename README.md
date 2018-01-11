@@ -22,12 +22,12 @@ removeNPMAbsolutePaths simply loop through all the files in the given folder, op
 You can  install removeNPMAbsolutePaths globally and use it from the command line
 ```Javascript
 npm install -g removeNPMAbsolutePaths
-removeNPMAbsolutePaths "<PROJECT_FOLDER>"
+removeNPMAbsolutePaths '<PROJECT_FOLDER>'
 ```
 or use it from whithin your code
 ```Javascript
 var removeNPMAbsolutePaths = require('removeNPMAbsolutePaths');
-removeNPMAbsolutePaths("<PROJECT_FOLDER>")
+removeNPMAbsolutePaths('<PROJECT_FOLDER>')
   .then(results => results.forEach(result => {
     // Print only information about files that couldn't be processed
     if (!result.success) {
@@ -41,11 +41,11 @@ Using `removeNPMAbsolutePaths` from within Javascript returns a promise containi
 ### Options
 removeNPMAbsolutePaths can be configured using tags. Tags can be added to the command line commands:
 ```Javascript
-removeNPMAbsolutePaths "<PROJECT_FOLDER>" --tag1 --tag2
+removeNPMAbsolutePaths '<PROJECT_FOLDER>' --tag1 --tag2
 ```
 or passed programmatically in an options object
 ```Javascript
-removeNPMAbsolutePaths("<PROJECT_FOLDER>", { tag1: true, tag2: false});
+removeNPMAbsolutePaths('<PROJECT_FOLDER>', { tag1: true, tag2: false});
 ```
 
 #### force
@@ -55,11 +55,11 @@ removeNPMAbsolutePaths only rewrite to disk the files that it modifies. Passing 
 removeNPMAbsolutePaths by default removes all fields starting with `_`. Passing the `--fields` tag followed by a list of field names you want removed will cause it to remove only those ones you list.  This might be useful if only some of the fields in package.json are bothering you.
 
 ```Javascript
-removeNPMAbsolutePaths "<PROJECT_FOLDER>" --fields _where _args
+removeNPMAbsolutePaths '<PROJECT_FOLDER>' --fields _where _args
 ```
 
 ```Javascript
-removeNPMAbsolutePaths("<PROJECT_FOLDER>", { tag1: true, fields: ["_where", "_args"]});
+removeNPMAbsolutePaths('<PROJECT_FOLDER>', { tag1: true, fields: ['_where', '_args']});
 ```
 
 
