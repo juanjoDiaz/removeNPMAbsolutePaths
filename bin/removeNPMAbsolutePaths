@@ -18,7 +18,7 @@ const opts = {
 
 const ignoredOptions = [];
 
-for (let i = 0; i < args.length; i += 1) {
+for (let i = 1; i < args.length; i += 1) {
   const arg = args[i];
   switch (arg) {
     case '--force':
