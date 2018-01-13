@@ -20,12 +20,12 @@ A feature request has been raised to NPM to fix this issue but they have made cl
 removeNPMAbsolutePaths simply loop through all the files in the given folder, open the files called `package.json` and remove all the fields starting with an underscore (`_`).
 
 You can  install removeNPMAbsolutePaths globally and use it from the command line
-```Javascript
-npm install -g removeNPMAbsolutePaths
-removeNPMAbsolutePaths '<PROJECT_FOLDER>'
+```sh 
+$ npm install -g removeNPMAbsolutePaths
+$ removeNPMAbsolutePaths '<PROJECT_FOLDER>'
 ```
 or use it from whithin your code
-```Javascript
+```javascript
 var removeNPMAbsolutePaths = require('removeNPMAbsolutePaths');
 removeNPMAbsolutePaths('<PROJECT_FOLDER>')
   .then(results => results.forEach(result => {
@@ -40,27 +40,19 @@ Using `removeNPMAbsolutePaths` from within Javascript returns a promise containi
 
 ### Options
 removeNPMAbsolutePaths can be configured using tags. Tags can be added to the command line commands:
-```Javascript
-removeNPMAbsolutePaths '<PROJECT_FOLDER>' --tag1 --tag2
+```sh 
+$ removeNPMAbsolutePaths '<PROJECT_FOLDER>' --force --fields _where _args
 ```
 or passed programmatically in an options object
-```Javascript
-removeNPMAbsolutePaths('<PROJECT_FOLDER>', { tag1: true, tag2: false});
+```javascript
+removeNPMAbsolutePaths('<PROJECT_FOLDER>', { force: true, fields: ['_where', '_args']});
 ```
 
 #### force
 removeNPMAbsolutePaths only rewrite to disk the files that it modifies. Passing the `--force` tag will rewritte all the files even if they haven't been modfied. This might be useful if you want all the package.json files to have always exactly the same styling for example for hashing.
 
 #### fields
-removeNPMAbsolutePaths by default removes all fields starting with `_`. Passing the `--fields` tag followed by a list of field names you want removed will cause it to remove only those ones you list.  This might be useful if only some of the fields in package.json are bothering you.
-
-```Javascript
-removeNPMAbsolutePaths '<PROJECT_FOLDER>' --fields _where _args
-```
-
-```Javascript
-removeNPMAbsolutePaths('<PROJECT_FOLDER>', { tag1: true, fields: ['_where', '_args']});
-```
+removeNPMAbsolutePaths by default removes all fields starting with `_`. Passing the `--fields` tag followed by a list of field names you want removed will cause it to remove only those ones you list. This might be useful if only some of the fields in package.json are bothering you.
 
 
 ## License
