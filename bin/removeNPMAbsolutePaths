@@ -4,7 +4,7 @@
 
 'use strict';
 
-const cli = require('../src/cli.js');
+const cli = require('../src/cli');
 const removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
 
 Promise.resolve()
