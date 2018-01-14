@@ -113,7 +113,7 @@ function removeNPMAbsolutePaths(filePath, opts) {
   opts = opts || {}; // eslint-disable-line no-param-reassign
 
   if (!filePath) {
-    return Promise.reject(new Error('Missing path. The first argument should be the path to a directory or a package.json file.'));
+    return Promise.reject(new Error('Missing path.\nThe first argument should be the path to a directory or a package.json file.'));
   }
 
   return getStats(filePath)

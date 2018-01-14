@@ -16,37 +16,48 @@ describe('cli', function () {
     const unknownArg1 = 'wrong';
     const unknownArg2 = '--wrong';
 
-    it('fails if path is empty', function () {
-      const args = [];
-      expect(() => cli.parseArguments(args)).to.throw('Missing path.\nThe first argument should be the path to a directory or a package.json file.');
+    describe('path (first argument)', function () {
+      it('fails if path is empty', function () {
+        const args = [];
+        expect(() => cli.parseArguments(args)).to.throw('Missing path.\nThe first argument should be the path to a directory or a package.json file.');
+      });
+
+      it('set the path to the value passed and use default values', function () {
+        const args = [path];
+        const parsedArgs = cli.parseArguments(args);
+        expect(parsedArgs.path).to.equal(path);
+        expect(parsedArgs.opts).to.deep.equal(cli.defaultOpts);
+      });
     });
 
-    it('set the path to the value passed and use default values', function () {
-      const args = [path];
-      const parsedArgs = cli.parseArguments(args);
-      expect(parsedArgs.path).to.equal(path);
-      expect(parsedArgs.opts).to.deep.equal(cli.defaultOpts);
+    describe('--force', function () {
+      it('set the force option to true if --force flag is passed', function () {
+        const args = [path, '--force'];
+        const parsedArgs = cli.parseArguments(args);
+        expect(parsedArgs.path).to.equal(path);
+        expect(parsedArgs.opts.force).to.equal(true);
+        expect(parsedArgs.ignored).to.be.empty;
+      });
     });
 
-    it('set the force option to true if --force flag is passed', function () {
-      const args = [path, '--force'];
-      const parsedArgs = cli.parseArguments(args);
-      expect(parsedArgs.path).to.equal(path);
-      expect(parsedArgs.opts.force).to.equal(true);
-      expect(parsedArgs.ignored).to.be.empty;
-    });
+    describe('--fields', function () {
+      it('fails if --field flag  is duplicated', function () {
+        const args = [path, '--fields', 'field1', '--fields', 'field1'];
+        expect(() => cli.parseArguments(args)).to.throw('Duplicated argument: --fields.\nThe --fields flag has been detected twice.');
+      });
 
-    it('fails if --field flag and no fields are passed', function () {
-      const args = [path, '--fields'];
-      expect(() => cli.parseArguments(args)).to.throw('Invalid argument --fields.\nThe --fields flag should be followed by the specific fields that should be removed but none was found');
-    });
+      it('fails if --field flag and no fields are passed', function () {
+        const args = [path, '--fields'];
+        expect(() => cli.parseArguments(args)).to.throw('Invalid argument usage: --fields.\nThe --fields flag should be followed by the specific fields that should be removed but none was found.');
+      });
 
-    it('set the fields option if --field flag and some fields are passed', function () {
-      const args = [path, '--fields'].concat(testFields);
-      const parsedArgs = cli.parseArguments(args);
-      expect(parsedArgs.path).to.equal(path);
-      expect(parsedArgs.opts.fields).to.deep.equal(testFields);
-      expect(parsedArgs.ignored).to.be.empty;
+      it('set the fields option if --field flag and some fields are passed', function () {
+        const args = [path, '--fields'].concat(testFields);
+        const parsedArgs = cli.parseArguments(args);
+        expect(parsedArgs.path).to.equal(path);
+        expect(parsedArgs.opts.fields).to.deep.equal(testFields);
+        expect(parsedArgs.ignored).to.be.empty;
+      });
     });
 
     it('ignore unknown arguments', function () {

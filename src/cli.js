@@ -21,19 +21,23 @@ function parseArguments(args) {
         opts.force = true;
         break;
       case '--fields':
-        opts.fields = opts.fields || [];
+        if (opts.fields) {
+          throw new Error('Duplicated argument: --fields.\nThe --fields flag has been detected twice.');
+        }
+
+        opts.fields = [];
         while (args[i + 1] && args[i + 1].slice(0, 2) !== '--') {
           opts.fields.push(args[i += 1]);
+        }
+
+        if (opts.fields && opts.fields.length === 0) {
+          throw new Error('Invalid argument usage: --fields.\nThe --fields flag should be followed by the specific fields that should be removed but none was found.');
         }
         break;
       default:
         ignored.push(arg);
         break;
     }
-  }
-
-  if (opts.fields && opts.fields.length === 0) {
-    throw new Error('Invalid argument --fields.\nThe --fields flag should be followed by the specific fields that should be removed but none was found');
   }
 
   return {
