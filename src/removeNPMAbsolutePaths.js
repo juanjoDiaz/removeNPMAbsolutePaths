@@ -116,6 +116,10 @@ function removeNPMAbsolutePaths(filePath, opts) {
     return Promise.reject(new Error('Missing path.\nThe first argument should be the path to a directory or a package.json file.'));
   }
 
+  if (opts.fields && (opts.fields.constructor !== Array || opts.fields.length === 0)) {
+    return Promise.reject(new Error('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.'));
+  }
+
   return getStats(filePath)
     .then((stats) => {
       if (stats.isDirectory()) {

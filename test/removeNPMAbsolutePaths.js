@@ -16,7 +16,7 @@ chai.use(chaiAsPromised);
 const removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
 
 describe('removeNPMAbsolutePaths.js', function () {
-  describe('input', function () {
+  describe('valid permissions', function () {
     let stat;
     let readdir;
     let readFile;
@@ -44,7 +44,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       writeFile.restore();
     });
 
-    describe('is invalid path', function () {
+    describe('invalid path', function () {
       it('fails if path is empty', function () {
         const promise = removeNPMAbsolutePaths();
         return expect(promise).to.be.rejectedWith('Missing path')
@@ -108,8 +108,8 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
     });
 
-    describe('is valid directory path to invalid file', function () {
-      it('return error on malformed files ', function () {
+    describe('directory path', function () {
+      it('return error on malformed files if file is malformed', function () {
         const dirPath = `${__dirname}/data/malformed`;
         const filePath = `${dirPath}/module/package.json`;
         const promise = removeNPMAbsolutePaths(dirPath);
@@ -128,9 +128,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(writeFile).to.not.have.been.called;
           });
       });
-    });
 
-    describe('is valid directory path', function () {
       it('rewrite pacakge.json if contains _fields', function () {
         const dirPath = `${__dirname}/data/underscore_fields`;
         const filePath = `${dirPath}/module/package.json`;
@@ -186,7 +184,37 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
       });
 
-      describe('field', function () {
+      describe('fields', function () {
+        it('return error if fields option is passed but is not an array', function () {
+          const dirPath = `${__dirname}/data/underscore_fields`;
+          const opts = {
+            fields: 'string_value',
+          };
+          const promise = removeNPMAbsolutePaths(dirPath, opts);
+          return expect(promise).to.be.rejectedWith('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.')
+            .then(() => {
+              expect(stat).to.not.have.been.called;
+              expect(readdir).to.not.have.been.called;
+              expect(readFile).to.not.have.been.called;
+              expect(writeFile).to.not.have.been.called;
+            });
+        });
+
+        it('return error if fields option is passed but is empty', function () {
+          const dirPath = `${__dirname}/data/underscore_fields`;
+          const opts = {
+            fields: [],
+          };
+          const promise = removeNPMAbsolutePaths(dirPath, opts);
+          return expect(promise).to.be.rejectedWith('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.')
+            .then(() => {
+              expect(stat).to.not.have.been.called;
+              expect(readdir).to.not.have.been.called;
+              expect(readFile).to.not.have.been.called;
+              expect(writeFile).to.not.have.been.called;
+            });
+        });
+
         it('rewrite only user-specified fields in package.json if fields option is passed', function () {
           const dirPath = `${__dirname}/data/underscore_fields`;
           const filePath = `${dirPath}/module/package.json`;
@@ -214,8 +242,8 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
     });
 
-    describe('is valid file path to invalid file', function () {
-      it('return error on malformed files ', function () {
+    describe('file path', function () {
+      it('return error on malformed files if file is malformed', function () {
         const filePath = `${__dirname}/data/malformed/module/package.json`;
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
@@ -233,9 +261,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(writeFile).to.not.have.been.called;
           });
       });
-    });
 
-    describe('is valid file path', function () {
       it('rewrite file if contains _fields', function () {
         const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
         const promise = removeNPMAbsolutePaths(filePath);
@@ -288,8 +314,37 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
       });
 
+      describe('fields', function () {
+        it('return error if fields option is passed but is not an array', function () {
+          const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+          const opts = {
+            fields: 'string_value',
+          };
+          const promise = removeNPMAbsolutePaths(filePath, opts);
+          return expect(promise).to.be.rejectedWith('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.')
+            .then(() => {
+              expect(stat).to.not.have.been.called;
+              expect(readdir).to.not.have.been.called;
+              expect(readFile).to.not.have.been.called;
+              expect(writeFile).to.not.have.been.called;
+            });
+        });
 
-      describe('field', function () {
+        it('return error if fields option is passed but is empty', function () {
+          const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+          const opts = {
+            fields: [],
+          };
+          const promise = removeNPMAbsolutePaths(filePath, opts);
+          return expect(promise).to.be.rejectedWith('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.')
+            .then(() => {
+              expect(stat).to.not.have.been.called;
+              expect(readdir).to.not.have.been.called;
+              expect(readFile).to.not.have.been.called;
+              expect(writeFile).to.not.have.been.called;
+            });
+        });
+
         it('rewrite only user-specified fields in package.json if fields option is passed', function () {
           const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
           const opts = {
@@ -317,150 +372,152 @@ describe('removeNPMAbsolutePaths.js', function () {
     });
   });
 
-  describe('read directory', function () {
-    let stat;
-    let readdir;
-    let readFile;
-    let writeFile;
+  describe('invalid permissions', function () {
+    describe('read directory', function () {
+      let stat;
+      let readdir;
+      let readFile;
+      let writeFile;
 
-    before(function () {
-      stat = sinon.spy(fs, 'stat');
-      readdir = sinon.stub(fs, 'readdir');
-      readFile = sinon.spy(fs, 'readFile');
-      writeFile = sinon.spy(fs, 'writeFile');
+      before(function () {
+        stat = sinon.spy(fs, 'stat');
+        readdir = sinon.stub(fs, 'readdir');
+        readFile = sinon.spy(fs, 'readFile');
+        writeFile = sinon.spy(fs, 'writeFile');
+      });
+
+      beforeEach(function () {
+        stat.reset();
+        readdir.reset();
+        readFile.reset();
+        writeFile.reset();
+      });
+
+      after(function () {
+        stat.restore();
+        readdir.restore();
+        readFile.restore();
+        writeFile.restore();
+      });
+
+      it('return error if can\'t read file', function () {
+        const err = new Error('Can\'t read directory.');
+        readdir.yields(err);
+        const dirPath = `${__dirname}/data/underscore_fields`;
+        const promise = removeNPMAbsolutePaths(dirPath);
+        return expect(promise).be.fulfilled
+          .then((results) => {
+            expect(results).to.be.an('array').that.have.lengthOf(1);
+            const fileResults = results.find(result => result.dirPath === dirPath);
+            expect(fileResults).to.include({ success: false });
+            expect(fileResults.err)
+              .to.exist
+              .and.be.instanceof(Error)
+              .and.to.include({ message: `Can't read directory at "${dirPath}"`, cause: err });
+            expect(stat).to.have.been.calledOnce.and.calledWith(dirPath);
+            expect(readdir).to.have.been.calledOnce.and.calledWith(dirPath);
+            expect(readFile).to.not.have.been.called;
+            expect(writeFile).to.not.have.been.called;
+          });
+      });
     });
 
-    beforeEach(function () {
-      stat.reset();
-      readdir.reset();
-      readFile.reset();
-      writeFile.reset();
+    describe('read file', function () {
+      let stat;
+      let readdir;
+      let readFile;
+      let writeFile;
+
+      before(function () {
+        stat = sinon.spy(fs, 'stat');
+        readdir = sinon.spy(fs, 'readdir');
+        readFile = sinon.stub(fs, 'readFile');
+        writeFile = sinon.stub(fs, 'writeFile');
+      });
+
+      beforeEach(function () {
+        stat.reset();
+        readdir.reset();
+        readFile.reset();
+        writeFile.reset();
+      });
+
+      after(function () {
+        stat.restore();
+        readdir.restore();
+        readFile.restore();
+        writeFile.restore();
+      });
+
+      it('return error if can\'t read file', function () {
+        const err = new Error('Can\'t read file.');
+        readFile.yields(err);
+        const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+        const promise = removeNPMAbsolutePaths(filePath);
+        return expect(promise).be.fulfilled
+          .then((results) => {
+            expect(results).to.be.an('array').that.have.lengthOf(1);
+            const fileResults = results.find(result => result.filePath === filePath);
+            expect(fileResults).to.include({ success: false });
+            expect(fileResults.err)
+              .to.exist
+              .and.be.instanceof(Error)
+              .and.to.include({ message: `Can't read file at "${filePath}"`, cause: err });
+            expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
+            expect(readdir).to.not.have.been.called;
+            expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
+            expect(writeFile).to.not.have.been.called;
+          });
+      });
     });
 
-    after(function () {
-      stat.restore();
-      readdir.restore();
-      readFile.restore();
-      writeFile.restore();
-    });
+    describe('write file', function () {
+      let stat;
+      let readdir;
+      let readFile;
+      let writeFile;
 
-    it('return error if can\'t read file', function () {
-      const err = new Error('Can\'t read directory.');
-      readdir.yields(err);
-      const dirPath = `${__dirname}/data/underscore_fields`;
-      const promise = removeNPMAbsolutePaths(dirPath);
-      return expect(promise).be.fulfilled
-        .then((results) => {
-          expect(results).to.be.an('array').that.have.lengthOf(1);
-          const fileResults = results.find(result => result.dirPath === dirPath);
-          expect(fileResults).to.include({ success: false });
-          expect(fileResults.err)
-            .to.exist
-            .and.be.instanceof(Error)
-            .and.to.include({ message: `Can't read directory at "${dirPath}"`, cause: err });
-          expect(stat).to.have.been.calledOnce.and.calledWith(dirPath);
-          expect(readdir).to.have.been.calledOnce.and.calledWith(dirPath);
-          expect(readFile).to.not.have.been.called;
-          expect(writeFile).to.not.have.been.called;
-        });
-    });
-  });
+      before(function () {
+        stat = sinon.spy(fs, 'stat');
+        readdir = sinon.spy(fs, 'readdir');
+        readFile = sinon.spy(fs, 'readFile');
+        writeFile = sinon.stub(fs, 'writeFile');
+      });
 
-  describe('read file', function () {
-    let stat;
-    let readdir;
-    let readFile;
-    let writeFile;
+      beforeEach(function () {
+        stat.reset();
+        readdir.reset();
+        readFile.reset();
+        writeFile.reset();
+      });
 
-    before(function () {
-      stat = sinon.spy(fs, 'stat');
-      readdir = sinon.spy(fs, 'readdir');
-      readFile = sinon.stub(fs, 'readFile');
-      writeFile = sinon.spy(fs, 'writeFile');
-    });
+      after(function () {
+        stat.restore();
+        readdir.restore();
+        readFile.restore();
+        writeFile.restore();
+      });
 
-    beforeEach(function () {
-      stat.reset();
-      readdir.reset();
-      readFile.reset();
-      writeFile.reset();
-    });
-
-    after(function () {
-      stat.restore();
-      readdir.restore();
-      readFile.restore();
-      writeFile.restore();
-    });
-
-    it('return error if can\'t read file', function () {
-      const err = new Error('Can\'t read file.');
-      readFile.yields(err);
-      const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
-      const promise = removeNPMAbsolutePaths(filePath);
-      return expect(promise).be.fulfilled
-        .then((results) => {
-          expect(results).to.be.an('array').that.have.lengthOf(1);
-          const fileResults = results.find(result => result.filePath === filePath);
-          expect(fileResults).to.include({ success: false });
-          expect(fileResults.err)
-            .to.exist
-            .and.be.instanceof(Error)
-            .and.to.include({ message: `Can't read file at "${filePath}"`, cause: err });
-          expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
-          expect(readdir).to.not.have.been.called;
-          expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
-          expect(writeFile).to.not.have.been.called;
-        });
-    });
-  });
-
-  describe('write file', function () {
-    let stat;
-    let readdir;
-    let readFile;
-    let writeFile;
-
-    before(function () {
-      stat = sinon.spy(fs, 'stat');
-      readdir = sinon.spy(fs, 'readdir');
-      readFile = sinon.spy(fs, 'readFile');
-      writeFile = sinon.stub(fs, 'writeFile');
-    });
-
-    beforeEach(function () {
-      stat.reset();
-      readdir.reset();
-      readFile.reset();
-      writeFile.reset();
-    });
-
-    after(function () {
-      stat.restore();
-      readdir.restore();
-      readFile.restore();
-      writeFile.restore();
-    });
-
-    it('return error if can\'t write to file', function () {
-      const err = new Error('Can\'t write to file.');
-      writeFile.yields(err);
-      const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
-      const promise = removeNPMAbsolutePaths(filePath);
-      return expect(promise).be.fulfilled
-        .then((results) => {
-          expect(results).to.be.an('array').that.have.lengthOf(1);
-          const fileResults = results.find(result => result.filePath === filePath);
-          expect(fileResults).to.include({ success: false });
-          expect(fileResults.err)
-            .to.exist
-            .and.be.instanceof(Error)
-            .and.to.include({ message: `Can't write processed file to "${filePath}"`, cause: err });
-          expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
-          expect(readdir).to.not.have.been.called;
-          expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
-          expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
-        });
+      it('return error if can\'t write to file', function () {
+        const err = new Error('Can\'t write to file.');
+        writeFile.yields(err);
+        const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+        const promise = removeNPMAbsolutePaths(filePath);
+        return expect(promise).be.fulfilled
+          .then((results) => {
+            expect(results).to.be.an('array').that.have.lengthOf(1);
+            const fileResults = results.find(result => result.filePath === filePath);
+            expect(fileResults).to.include({ success: false });
+            expect(fileResults.err)
+              .to.exist
+              .and.be.instanceof(Error)
+              .and.to.include({ message: `Can't write processed file to "${filePath}"`, cause: err });
+            expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
+            expect(readdir).to.not.have.been.called;
+            expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
+            expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+          });
+      });
     });
   });
 });
