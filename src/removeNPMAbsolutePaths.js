@@ -36,20 +36,26 @@ function processFile(filePath, opts) {
   })
     .then((data) => {
       let writeFile = false;
+      let errorFound = false;
       let obj;
       try {
         obj = JSON.parse(data);
       } catch (err) {
-        throw createError(`Malformed package.json file at "${filePath}"`, err);
+        writeFile = false;
+        errorFound = true;
+        console.log(`Malformed package.json file at "${filePath}"`);
+        console.log('skipping...');
       }
 
-      Object.keys(obj).forEach((key) => {
-        const shouldBeDeleted = opts.fields ? (opts.fields.indexOf(key) !== -1) : (key[0] === '_');
-        if (shouldBeDeleted) {
-          delete obj[key];
-          writeFile = true;
-        }
-      });
+      if(!errorFound) {
+        Object.keys(obj).forEach((key) => {
+          const shouldBeDeleted = opts.fields ? (opts.fields.indexOf(key) !== -1) : (key[0] === '_');
+          if (shouldBeDeleted) {
+            delete obj[key];
+            writeFile = true;
+          }
+        });
+      }
 
       if (writeFile || opts.force) {
         return new Promise((resolve, reject) => {
@@ -113,11 +119,7 @@ function removeNPMAbsolutePaths(filePath, opts) {
   opts = opts || {}; // eslint-disable-line no-param-reassign
 
   if (!filePath) {
-    return Promise.reject(new Error('Missing path.\nThe first argument should be the path to a directory or a package.json file.'));
-  }
-
-  if (opts.fields && (opts.fields.constructor !== Array || opts.fields.length === 0)) {
-    return Promise.reject(new Error('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.'));
+    return Promise.reject(new Error('Missing path. The first argument should be the path to a directory or a package.json file.'));
   }
 
   return getStats(filePath)
