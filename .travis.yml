@@ -6,8 +6,6 @@ node_js:
 - '6'
 - '5'
 - '4'
-before_install:
-- npm install -g npm@latest
 script: npm run travis
 after_success: npm run coveralls
 deploy:
