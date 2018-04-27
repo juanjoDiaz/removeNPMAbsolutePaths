@@ -30,10 +30,10 @@ describe('removeNPMAbsolutePaths.js', function () {
     });
 
     beforeEach(function () {
-      stat.reset();
-      readdir.reset();
-      readFile.reset();
-      writeFile.reset();
+      stat.resetHistory();
+      readdir.resetHistory();
+      readFile.resetHistory();
+      writeFile.resetHistory();
       writeFile.yields(null);
     });
 
@@ -387,10 +387,10 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       beforeEach(function () {
-        stat.reset();
-        readdir.reset();
-        readFile.reset();
-        writeFile.reset();
+        stat.resetHistory();
+        readdir.resetHistory();
+        readFile.resetHistory();
+        writeFile.resetHistory();
       });
 
       after(function () {
@@ -436,10 +436,10 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       beforeEach(function () {
-        stat.reset();
-        readdir.reset();
-        readFile.reset();
-        writeFile.reset();
+        stat.resetHistory();
+        readdir.resetHistory();
+        readFile.resetHistory();
+        writeFile.resetHistory();
       });
 
       after(function () {
@@ -485,10 +485,10 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       beforeEach(function () {
-        stat.reset();
-        readdir.reset();
-        readFile.reset();
-        writeFile.reset();
+        stat.resetHistory();
+        readdir.resetHistory();
+        readFile.resetHistory();
+        writeFile.resetHistory();
       });
 
       after(function () {
