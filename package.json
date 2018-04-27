@@ -28,6 +28,12 @@
   "bin": {
     "removeNPMAbsolutePaths": "bin/removeNPMAbsolutePaths"
   },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "bin/",
+    "src/"
+  ],
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
