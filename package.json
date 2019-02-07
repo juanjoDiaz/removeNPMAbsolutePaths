@@ -24,7 +24,7 @@
     "email": "juanjo.diazmo@gmail.com"
   },
   "license": "MIT",
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "bin": {
     "removeNPMAbsolutePaths": "bin/removeNPMAbsolutePaths"
   },
