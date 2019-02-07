@@ -90,9 +90,12 @@ function processDir(dirPath, opts) {
         .then((stats) => {
           if (stats.isDirectory()) {
             return processDir(filePath, opts);
-          } else if (fileName === 'package.json') {
+          }
+
+          if (fileName === 'package.json') {
             return processFile(filePath, opts);
           }
+
           return undefined;
         });
     })))
@@ -126,7 +129,9 @@ function removeNPMAbsolutePaths(filePath, opts) {
     .then((stats) => {
       if (stats.isDirectory()) {
         return processDir(filePath, opts);
-      } else if (path.basename(filePath) === 'package.json') {
+      }
+
+      if (path.basename(filePath) === 'package.json') {
         return processFile(filePath, opts)
           .then(result => [result]);
       }
