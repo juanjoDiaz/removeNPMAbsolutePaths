@@ -68,7 +68,7 @@ function processFile(filePath, opts) {
     })
     .then(
       r => ({ filePath, rewritten: r.rewritten, success: true }),
-      err => ({ filePath, err, success: false }),
+      err => ({ filePath, err, success: false })
     );
 }
 
