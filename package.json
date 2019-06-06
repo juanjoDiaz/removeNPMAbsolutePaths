@@ -1,6 +1,6 @@
 {
   "name": "removeNPMAbsolutePaths",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Remove the fields containing local aboslute paths created by NPM",
   "keywords": [
     "npm",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "coveralls": "^3.0.3",
+    "coveralls": "^3.0.4",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.3",
