@@ -8,7 +8,7 @@
   ],
   "main": "src/removeNPMAbsolutePaths.js",
   "scripts": {
-    "lint": "eslint bin/removeNPMAbsolutePaths src test",
+    "lint": "eslint bin/removeNPMAbsolutePaths src test --ignore-pattern 'test/data/malformed/module/'",
     "test": "mocha test",
     "test-with-coverage": "nyc --reporter=text mocha test",
     "travis": "npm run lint && npm run test-with-coverage",
@@ -37,10 +37,10 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "coveralls": "^3.0.4",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.17.3",
+    "coveralls": "^3.0.5",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "sinon": "^7.3.2",
