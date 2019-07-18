@@ -7,18 +7,24 @@
 const cli = require('../src/cli');
 const removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
 
-Promise.resolve()
-  .then(() => cli.parseArguments(process.argv.slice(2)))
-  .then((args) => {
+async function main() {
+  try {
+    const args = await cli.parseArguments(process.argv.slice(2));
+
     if (args.ignored.length) {
       console.warn(`The following options are unknown and will be ignored:\n${args.ignored.join('\n')}`);
     }
 
-    return removeNPMAbsolutePaths(args.path, args.opts);
-  })
-  .then(results => results.forEach((result) => {
-    if (!result.success) {
-      console.log(result.err.message);
-    }
-  }))
-  .catch(err => console.log(err.message));
+    const results = await removeNPMAbsolutePaths(args.path, args.opts);
+
+    results.forEach((result) => {
+      if (!result.success) {
+        console.log(result.err.message);
+      }
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+main();

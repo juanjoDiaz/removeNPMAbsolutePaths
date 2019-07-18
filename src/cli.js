@@ -10,7 +10,7 @@ function parseArguments(args) {
   }
 
   const path = args[0];
-  const opts = Object.assign({}, defaultOpts);
+  const opts = { ...defaultOpts };
 
   const ignored = [];
 
