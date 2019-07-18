@@ -13,7 +13,13 @@ const expect = chai.expect;
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
-const removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
+let removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
+
+function clearCachedModuleSoNewMocksWork() {
+  delete require.cache[require.resolve('../src/removeNPMAbsolutePaths')];
+  // eslint-disable-next-line global-require
+  removeNPMAbsolutePaths = require('../src/removeNPMAbsolutePaths');
+}
 
 describe('removeNPMAbsolutePaths.js', function () {
   describe('valid permissions', function () {
@@ -27,6 +33,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       readdir = sinon.spy(fs, 'readdir');
       readFile = sinon.spy(fs, 'readFile');
       writeFile = sinon.stub(fs, 'writeFile');
+      clearCachedModuleSoNewMocksWork();
     });
 
     beforeEach(function () {
@@ -384,6 +391,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         readdir = sinon.stub(fs, 'readdir');
         readFile = sinon.spy(fs, 'readFile');
         writeFile = sinon.spy(fs, 'writeFile');
+        clearCachedModuleSoNewMocksWork();
       });
 
       beforeEach(function () {
@@ -403,6 +411,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       it('return error if can\'t read file', function () {
         const err = new Error('Can\'t read directory.');
         readdir.yields(err);
+        clearCachedModuleSoNewMocksWork();
         const dirPath = `${__dirname}/data/underscore_fields`;
         const promise = removeNPMAbsolutePaths(dirPath);
         return expect(promise).be.fulfilled
@@ -452,6 +461,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       it('return error if can\'t read file', function () {
         const err = new Error('Can\'t read file.');
         readFile.yields(err);
+        clearCachedModuleSoNewMocksWork();
         const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
@@ -501,6 +511,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       it('return error if can\'t write to file', function () {
         const err = new Error('Can\'t write to file.');
         writeFile.yields(err);
+        clearCachedModuleSoNewMocksWork();
         const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled

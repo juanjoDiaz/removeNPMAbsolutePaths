@@ -1,105 +1,99 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
+const {
+  stat, readdir, readFile, writeFile,
+} = require('fs');
+const { promisify } = require('util');
 const errno = require('./errno');
 
-function createError(message, rootErr) {
-  const err = new Error(message + (rootErr.errno ? ` (${errno[rootErr.errno]})` : ''));
-  err.cause = rootErr;
-  return err;
+const statAsync = promisify(stat);
+const readdirAsync = promisify(readdir);
+const readFileAsync = promisify(readFile);
+const writeFileAsync = promisify(writeFile);
+
+class ProcessingError extends Error {
+  constructor(message, err) {
+    super(message + ((err && err.errno) ? ` (${errno[err.errno]})` : ''));
+    this.cause = err;
+  }
 }
 
-function getStats(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.stat(filePath, (err, stats) => {
-      if (err) {
-        reject(createError(`Can't read directory/file at "${filePath}"`, err));
-        return;
-      }
-
-      resolve(stats);
-    });
-  });
+async function getStats(filePath) {
+  try {
+    return await statAsync(filePath);
+  } catch (err) {
+    throw new ProcessingError(`Can't read directory/file at "${filePath}"`, err);
+  }
 }
 
-function processFile(filePath, opts) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        reject(createError(`Can't read file at "${filePath}"`, err));
-        return;
-      }
+async function processFile(filePath, opts) {
+  try {
+    let data;
+    try {
+      data = await readFileAsync(filePath, 'utf8');
+    } catch (err) {
+      throw new ProcessingError(`Can't read file at "${filePath}"`, err);
+    }
 
-      resolve(data);
+    let shouldWriteFile = false;
+    let obj;
+    try {
+      obj = JSON.parse(data);
+    } catch (err) {
+      throw new ProcessingError(`Malformed package.json file at "${filePath}"`, err);
+    }
+
+    Object.keys(obj).forEach((key) => {
+      const shouldBeDeleted = opts.fields ? (opts.fields.indexOf(key) !== -1) : (key[0] === '_');
+      if (shouldBeDeleted) {
+        delete obj[key];
+        shouldWriteFile = true;
+      }
     });
-  })
-    .then((data) => {
-      let writeFile = false;
-      let obj;
+
+    if (shouldWriteFile || opts.force) {
       try {
-        obj = JSON.parse(data);
+        await writeFileAsync(filePath, JSON.stringify(obj, null, '  '));
       } catch (err) {
-        throw createError(`Malformed package.json file at "${filePath}"`, err);
+        throw new ProcessingError(`Can't write processed file to "${filePath}"`, err);
       }
 
-      Object.keys(obj).forEach((key) => {
-        const shouldBeDeleted = opts.fields ? (opts.fields.indexOf(key) !== -1) : (key[0] === '_');
-        if (shouldBeDeleted) {
-          delete obj[key];
-          writeFile = true;
-        }
-      });
+      return { filePath, rewritten: true, success: true };
+    }
 
-      if (writeFile || opts.force) {
-        return new Promise((resolve, reject) => {
-          fs.writeFile(filePath, JSON.stringify(obj, null, '  '), (err) => {
-            if (err) {
-              reject(createError(`Can't write processed file to "${filePath}"`, err));
-              return;
-            }
-
-            resolve({ rewritten: true });
-          });
-        });
-      }
-
-      return { rewritten: false };
-    })
-    .then(
-      r => ({ filePath, rewritten: r.rewritten, success: true }),
-      err => ({ filePath, err, success: false })
-    );
+    return { filePath, rewritten: false, success: true };
+  } catch (err) {
+    return { filePath, err, success: false };
+  }
 }
 
-function processDir(dirPath, opts) {
-  return new Promise((resolve, reject) => {
-    fs.readdir(dirPath, (err, files) => {
-      if (err) {
-        reject(createError(`Can't read directory at "${dirPath}"`, err));
-        return;
-      }
+async function processDir(dirPath, opts) {
+  try {
+    let files;
+    try {
+      files = await readdirAsync(dirPath);
+    } catch (err) {
+      throw new ProcessingError(`Can't read directory at "${dirPath}"`, err);
+    }
 
-      resolve(files);
-    });
-  })
-    .then(files => Promise.all(files.map((fileName) => {
+    const results = await Promise.all(files.map(async (fileName) => {
       const filePath = path.join(dirPath, fileName);
 
-      return getStats(filePath)
-        .then((stats) => {
-          if (stats.isDirectory()) {
-            return processDir(filePath, opts);
-          }
+      const stats = await getStats(filePath);
 
-          if (fileName === 'package.json') {
-            return processFile(filePath, opts);
-          }
+      if (stats.isDirectory()) {
+        return processDir(filePath, opts);
+      }
 
-          return undefined;
-        });
-    })))
-    .then(results => results.reduce((arr, value) => {
+      if (fileName === 'package.json') {
+        return processFile(filePath, opts);
+      }
+
+      return undefined;
+    }));
+
+    return results.reduce((arr, value) => {
       if (!value) {
         return arr;
       }
@@ -110,34 +104,34 @@ function processDir(dirPath, opts) {
 
       arr.push(value);
       return arr;
-    }, [{ dirPath, success: true }]))
-    .catch(err => [{ dirPath, err, success: false }]);
+    }, [{ dirPath, success: true }]);
+  } catch (err) {
+    return [{ dirPath, err, success: false }];
+  }
 }
 
-function removeNPMAbsolutePaths(filePath, opts) {
+async function removeNPMAbsolutePaths(filePath, opts) {
   opts = opts || {}; // eslint-disable-line no-param-reassign
 
   if (!filePath) {
-    return Promise.reject(new Error('Missing path.\nThe first argument should be the path to a directory or a package.json file.'));
+    throw new ProcessingError('Missing path.\nThe first argument should be the path to a directory or a package.json file.');
   }
 
   if (opts.fields && (opts.fields.constructor !== Array || opts.fields.length === 0)) {
-    return Promise.reject(new Error('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.'));
+    throw new ProcessingError('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.');
   }
 
-  return getStats(filePath)
-    .then((stats) => {
-      if (stats.isDirectory()) {
-        return processDir(filePath, opts);
-      }
+  const stats = await getStats(filePath);
 
-      if (path.basename(filePath) === 'package.json') {
-        return processFile(filePath, opts)
-          .then(result => [result]);
-      }
+  if (stats.isDirectory()) {
+    return processDir(filePath, opts);
+  }
 
-      throw new Error('Invalid path provided. The path should be a directory or a package.json file.');
-    });
+  if (path.basename(filePath) === 'package.json') {
+    return [await processFile(filePath, opts)];
+  }
+
+  throw new Error('Invalid path provided. The path should be a directory or a package.json file.');
 }
 
 module.exports = removeNPMAbsolutePaths;
