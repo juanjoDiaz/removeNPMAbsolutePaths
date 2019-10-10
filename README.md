@@ -5,7 +5,7 @@
 
 # removeNPMAbsolutePaths
 
-removeNPMAbsolutePaths is a small utility to remove the fields that npm adds to the modules in `node_modules` containing local aboslute paths.
+removeNPMAbsolutePaths is a small utility to remove the fields that npm adds to the modules in `node_modules` containing local absolute paths.
 
 It has been noted that the `package.json` of modules in the `node_modules` folder contain some extra fields like `_args` and `where` which contain the absolute path of the module. According to NPM those fields are not even used.
 
