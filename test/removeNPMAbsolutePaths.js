@@ -123,7 +123,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         return expect(promise).be.fulfilled
           .then((results) => {
             expect(results).to.be.an('array').that.have.lengthOf(3);
-            const fileResults = results.find(result => result.filePath === filePath);
+            const fileResults = results.find((result) => result.filePath === filePath);
             expect(fileResults).to.include({ success: false });
             expect(fileResults.err)
               .to.exist
@@ -143,7 +143,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         return expect(promise).be.fulfilled
           .then((results) => {
             expect(results).to.be.an('array').that.have.lengthOf(3);
-            const fileResults = results.find(result => result.filePath === filePath);
+            const fileResults = results.find((result) => result.filePath === filePath);
             expect(fileResults).to.include({ success: true, rewritten: true });
             expect(fileResults.err).to.not.exist;
             expect(stat).to.have.been.called;
@@ -151,7 +151,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
             expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
             const packageJson = JSON.parse(writeFile.getCall(0).args[1]);
-            expect(Object.keys(packageJson).find(key => key[0] === '_')).to.not.exist;
+            expect(Object.keys(packageJson).find((key) => key[0] === '_')).to.not.exist;
           });
       });
 
@@ -163,7 +163,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           return expect(promise).be.fulfilled
             .then((results) => {
               expect(results).to.be.an('array').that.have.lengthOf(3);
-              const fileResults = results.find(result => result.filePath === filePath);
+              const fileResults = results.find((result) => result.filePath === filePath);
               expect(fileResults).to.include({ success: true, rewritten: false });
               expect(fileResults.err).to.not.exist;
               expect(stat).to.have.been.called;
@@ -180,7 +180,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           return expect(promise).be.fulfilled
             .then((results) => {
               expect(results).to.be.an('array').that.have.lengthOf(3);
-              const fileResults = results.find(result => result.filePath === filePath);
+              const fileResults = results.find((result) => result.filePath === filePath);
               expect(fileResults).to.include({ success: true, rewritten: true });
               expect(fileResults.err).to.not.exist;
               expect(stat).to.have.been.called;
@@ -232,7 +232,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           return expect(promise).be.fulfilled
             .then((results) => {
               expect(results).to.be.an('array').that.have.lengthOf(3);
-              const fileResults = results.find(result => result.filePath === filePath);
+              const fileResults = results.find((result) => result.filePath === filePath);
               expect(fileResults).to.include({ success: true, rewritten: true });
               expect(fileResults.err).to.not.exist;
               expect(stat).to.have.been.called;
@@ -256,7 +256,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         return expect(promise).be.fulfilled
           .then((results) => {
             expect(results).to.be.an('array').that.have.lengthOf(1);
-            const fileResults = results.find(result => result.filePath === filePath);
+            const fileResults = results.find((result) => result.filePath === filePath);
             expect(fileResults).to.include({ success: false });
             expect(fileResults.err)
               .to.exist
@@ -275,7 +275,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         return expect(promise).be.fulfilled
           .then((results) => {
             expect(results).to.be.an('array').that.have.lengthOf(1);
-            const fileResults = results.find(result => result.filePath === filePath);
+            const fileResults = results.find((result) => result.filePath === filePath);
             expect(fileResults).to.include({ success: true, rewritten: true });
             expect(fileResults.err).to.not.exist;
             expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
@@ -283,7 +283,7 @@ describe('removeNPMAbsolutePaths.js', function () {
             expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
             expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
             const packageJson = JSON.parse(writeFile.getCall(0).args[1]);
-            expect(Object.keys(packageJson).find(key => key[0] === '_')).to.not.exist;
+            expect(Object.keys(packageJson).find((key) => key[0] === '_')).to.not.exist;
           });
       });
 
@@ -294,7 +294,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           return expect(promise).be.fulfilled
             .then((results) => {
               expect(results).to.be.an('array').that.have.lengthOf(1);
-              const fileResults = results.find(result => result.filePath === filePath);
+              const fileResults = results.find((result) => result.filePath === filePath);
               expect(fileResults).to.include({ success: true, rewritten: false });
               expect(fileResults.err).to.not.exist;
               expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
@@ -310,7 +310,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           return expect(promise).be.fulfilled
             .then((results) => {
               expect(results).to.be.an('array').that.have.lengthOf(1);
-              const fileResults = results.find(result => result.filePath === filePath);
+              const fileResults = results.find((result) => result.filePath === filePath);
               expect(fileResults).to.include({ success: true, rewritten: true });
               expect(fileResults.err).to.not.exist;
               expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
@@ -361,7 +361,7 @@ describe('removeNPMAbsolutePaths.js', function () {
           return expect(promise).be.fulfilled
             .then((results) => {
               expect(results).to.be.an('array').that.have.lengthOf(1);
-              const fileResults = results.find(result => result.filePath === filePath);
+              const fileResults = results.find((result) => result.filePath === filePath);
               expect(fileResults).to.include({ success: true, rewritten: true });
               expect(fileResults.err).to.not.exist;
               expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
@@ -417,7 +417,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         return expect(promise).be.fulfilled
           .then((results) => {
             expect(results).to.be.an('array').that.have.lengthOf(1);
-            const fileResults = results.find(result => result.dirPath === dirPath);
+            const fileResults = results.find((result) => result.dirPath === dirPath);
             expect(fileResults).to.include({ success: false });
             expect(fileResults.err)
               .to.exist
@@ -467,7 +467,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         return expect(promise).be.fulfilled
           .then((results) => {
             expect(results).to.be.an('array').that.have.lengthOf(1);
-            const fileResults = results.find(result => result.filePath === filePath);
+            const fileResults = results.find((result) => result.filePath === filePath);
             expect(fileResults).to.include({ success: false });
             expect(fileResults.err)
               .to.exist
@@ -517,7 +517,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         return expect(promise).be.fulfilled
           .then((results) => {
             expect(results).to.be.an('array').that.have.lengthOf(1);
-            const fileResults = results.find(result => result.filePath === filePath);
+            const fileResults = results.find((result) => result.filePath === filePath);
             expect(fileResults).to.include({ success: false });
             expect(fileResults.err)
               .to.exist
