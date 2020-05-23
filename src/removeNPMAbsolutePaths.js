@@ -54,7 +54,12 @@ async function processFile(filePath, opts) {
 
     if (shouldWriteFile || opts.force) {
       try {
-        await writeFileAsync(filePath, JSON.stringify(obj, null, '  '));
+        const jsonStr = JSON.stringify(obj, null, '  ');
+        // insert newline if previously present
+        if (data.endsWith('\n')) {
+          jsonStr.concat('\n');
+        }
+        await writeFileAsync(filePath, jsonStr);
       } catch (err) {
         throw new ProcessingError(`Can't write processed file to "${filePath}"`, err);
       }
