@@ -375,6 +375,24 @@ describe('removeNPMAbsolutePaths.js', function () {
               expect(packageJson).to.have.property('_shasum');
             });
         });
+
+        it('rewrite file if contains _fields in package.json with newline', function () {
+          const filePath = `${__dirname}/data/package_json_newline/module/package.json`;
+          const promise = removeNPMAbsolutePaths(filePath);
+          return expect(promise).be.fulfilled
+            .then((results) => {
+              expect(results).to.be.an('array').that.have.lengthOf(1);
+              const fileResults = results.find((result) => result.filePath === filePath);
+              expect(fileResults).to.include({ success: true, rewritten: true });
+              expect(fileResults.err).to.not.exist;
+              expect(stat).to.have.been.calledOnce.and.calledWith(filePath);
+              expect(readdir).to.not.have.been.called;
+              expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
+              expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+              const packageJson = JSON.parse(writeFile.getCall(0).args[1]);
+              expect(Object.keys(packageJson).find((key) => key[0] === '_')).to.not.exist;
+            });
+        });
       });
     });
   });
