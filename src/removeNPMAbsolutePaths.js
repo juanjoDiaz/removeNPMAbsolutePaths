@@ -54,10 +54,10 @@ async function processFile(filePath, opts) {
 
     if (shouldWriteFile || opts.force) {
       try {
-        const jsonStr = JSON.stringify(obj, null, '  ');
-        // insert newline if previously present
+        let jsonStr = JSON.stringify(obj, null, '  ');
+        // Preserve newline at the end of file
         if (data.endsWith('\n')) {
-          jsonStr.concat('\n');
+          jsonStr = jsonStr.concat('\n');
         }
         await writeFileAsync(filePath, jsonStr);
       } catch (err) {
