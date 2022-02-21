@@ -4,6 +4,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
@@ -64,7 +65,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       it('fails if file path is invalid', function () {
-        const filePath = `${__dirname}/FAKE_PATH/module/package.json`;
+        const filePath = path.join(__dirname, 'FAKE_PATH', 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).to.be.rejectedWith('Can\'t read directory/file')
           .then(() => {
@@ -76,7 +77,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       it('fails if file path is not package.json', function () {
-        const filePath = `${__dirname}/data/not_package_json/module/not_package.json`;
+        const filePath = path.join(__dirname, 'data', 'not_package_json', 'module', 'not_package.json');
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).to.be.rejectedWith('Invalid path provided')
           .then(() => {
@@ -88,7 +89,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       it('fails if directory path is invalid', function () {
-        const dirPath = `${__dirname}/FAKE_PATH`;
+        const dirPath = path.join(__dirname, 'FAKE_PATH');
         const promise = removeNPMAbsolutePaths(dirPath);
         return expect(promise).to.be.rejectedWith('Can\'t read directory/file')
           .then(() => {
@@ -100,8 +101,8 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       it('do nothing directory path doesn\'t contain package.json', function () {
-        const dirPath = `${__dirname}/data/not_package_json`;
-        const filePath = `${dirPath}/module/package.json`;
+        const dirPath = path.join(__dirname, 'data', 'not_package_json');
+        const filePath = path.join(dirPath, 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(dirPath);
         return expect(promise).be.fulfilled
           .then((results) => {
@@ -117,8 +118,8 @@ describe('removeNPMAbsolutePaths.js', function () {
 
     describe('directory path', function () {
       it('return error on malformed files if file is malformed', function () {
-        const dirPath = `${__dirname}/data/malformed`;
-        const filePath = `${dirPath}/module/package.json`;
+        const dirPath = path.join(__dirname, 'data', 'malformed');
+        const filePath = path.join(dirPath, 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(dirPath);
         return expect(promise).be.fulfilled
           .then((results) => {
@@ -137,8 +138,8 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       it('rewrite pacakge.json if contains _fields', function () {
-        const dirPath = `${__dirname}/data/underscore_fields`;
-        const filePath = `${dirPath}/module/package.json`;
+        const dirPath = path.join(__dirname, 'data', 'underscore_fields');
+        const filePath = path.join(dirPath, 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(dirPath);
         return expect(promise).be.fulfilled
           .then((results) => {
@@ -157,8 +158,8 @@ describe('removeNPMAbsolutePaths.js', function () {
 
       describe('force', function () {
         it('doesn\'t rewrite pacakge.json if doesn\'t contain _fields and force option isn\'t passed', function () {
-          const dirPath = `${__dirname}/data/no_underscore_fields`;
-          const filePath = `${dirPath}/module/package.json`;
+          const dirPath = path.join(__dirname, 'data', 'no_underscore_fields');
+          const filePath = path.join(dirPath, 'module', 'package.json');
           const promise = removeNPMAbsolutePaths(dirPath);
           return expect(promise).be.fulfilled
             .then((results) => {
@@ -174,8 +175,8 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
 
         it('rewrite pacakge.json if doesn\'t contain _fields and force option is passed', function () {
-          const dirPath = `${__dirname}/data/no_underscore_fields`;
-          const filePath = `${dirPath}/module/package.json`;
+          const dirPath = path.join(__dirname, 'data', 'no_underscore_fields');
+          const filePath = path.join(dirPath, 'module', 'package.json');
           const promise = removeNPMAbsolutePaths(dirPath, { force: true });
           return expect(promise).be.fulfilled
             .then((results) => {
@@ -193,7 +194,7 @@ describe('removeNPMAbsolutePaths.js', function () {
 
       describe('fields', function () {
         it('return error if fields option is passed but is not an array', function () {
-          const dirPath = `${__dirname}/data/underscore_fields`;
+          const dirPath = path.join(__dirname, 'data', 'underscore_fields');
           const opts = {
             fields: 'string_value',
           };
@@ -208,7 +209,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
 
         it('return error if fields option is passed but is empty', function () {
-          const dirPath = `${__dirname}/data/underscore_fields`;
+          const dirPath = path.join(__dirname, 'data' ,'underscore_fields');
           const opts = {
             fields: [],
           };
@@ -223,8 +224,8 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
 
         it('rewrite only user-specified fields in package.json if fields option is passed', function () {
-          const dirPath = `${__dirname}/data/underscore_fields`;
-          const filePath = `${dirPath}/module/package.json`;
+          const dirPath = path.join(__dirname, 'data', 'underscore_fields');
+          const filePath = path.join(dirPath, 'module', 'package.json');
           const opts = {
             fields: ['_inBundle', '_where'],
           };
@@ -251,7 +252,7 @@ describe('removeNPMAbsolutePaths.js', function () {
 
     describe('file path', function () {
       it('return error on malformed files if file is malformed', function () {
-        const filePath = `${__dirname}/data/malformed/module/package.json`;
+        const filePath = path.join(__dirname, 'data', 'malformed', 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
           .then((results) => {
@@ -270,7 +271,7 @@ describe('removeNPMAbsolutePaths.js', function () {
       });
 
       it('rewrite file if contains _fields', function () {
-        const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+        const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
           .then((results) => {
@@ -289,7 +290,7 @@ describe('removeNPMAbsolutePaths.js', function () {
 
       describe('force', function () {
         it('doesn\'t rewrite file if doesn\'t contain _fields and force option isn\'t passed', function () {
-          const filePath = `${__dirname}/data/no_underscore_fields/module/package.json`;
+          const filePath = path.join(__dirname, 'data', 'no_underscore_fields', 'module', 'package.json');
           const promise = removeNPMAbsolutePaths(filePath);
           return expect(promise).be.fulfilled
             .then((results) => {
@@ -305,7 +306,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
 
         it('rewrite file if doesn\'t contain _fields and force option is passed', function () {
-          const filePath = `${__dirname}/data/no_underscore_fields/module/package.json`;
+          const filePath = path.join(__dirname, 'data', 'no_underscore_fields', 'module', 'package.json');
           const promise = removeNPMAbsolutePaths(filePath, { force: true });
           return expect(promise).be.fulfilled
             .then((results) => {
@@ -323,7 +324,7 @@ describe('removeNPMAbsolutePaths.js', function () {
 
       describe('fields', function () {
         it('return error if fields option is passed but is not an array', function () {
-          const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+          const filePath = path.join(__dirname, 'data' , 'underscore_fields' , 'module' , 'package.json');
           const opts = {
             fields: 'string_value',
           };
@@ -338,7 +339,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
 
         it('return error if fields option is passed but is empty', function () {
-          const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+          const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
           const opts = {
             fields: [],
           };
@@ -353,7 +354,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
 
         it('rewrite only user-specified fields in package.json if fields option is passed', function () {
-          const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+          const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
           const opts = {
             fields: ['_inBundle', '_where'],
           };
@@ -412,7 +413,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         const err = new Error('Can\'t read directory.');
         readdir.yields(err);
         clearCachedModuleSoNewMocksWork();
-        const dirPath = `${__dirname}/data/underscore_fields`;
+        const dirPath = path.join(__dirname, 'data', 'underscore_fields');
         const promise = removeNPMAbsolutePaths(dirPath);
         return expect(promise).be.fulfilled
           .then((results) => {
@@ -462,7 +463,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         const err = new Error('Can\'t read file.');
         readFile.yields(err);
         clearCachedModuleSoNewMocksWork();
-        const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+        const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
           .then((results) => {
@@ -512,7 +513,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         const err = new Error('Can\'t write to file.');
         writeFile.yields(err);
         clearCachedModuleSoNewMocksWork();
-        const filePath = `${__dirname}/data/underscore_fields/module/package.json`;
+        const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(filePath);
         return expect(promise).be.fulfilled
           .then((results) => {
