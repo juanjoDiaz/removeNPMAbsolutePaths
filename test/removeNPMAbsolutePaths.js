@@ -142,6 +142,40 @@ describe('removeNPMAbsolutePaths.js', async function () {
         expect(Object.keys(packageJson).find((key) => key[0] === '_')).to.not.exist;
       });
 
+      it('preserve newline at the end of packa.json if rewriting', async function () {
+        const dirPath = path.join(__dirname, 'data', 'underscore_fields');
+        const filePath = path.join(dirPath, 'module', 'package.json');
+        const promise = removeNPMAbsolutePaths(dirPath);
+        const results = await expect(promise).be.fulfilled;
+        expect(results).to.be.an('array').that.have.lengthOf(3);
+        const fileResults = results.find((result) => result.filePath === filePath);
+        expect(fileResults).to.include({ success: true, rewritten: true });
+        expect(fileResults.err).to.not.exist;
+        expect(stat).to.have.been.called;
+        expect(readdir).to.have.been.called;
+        expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
+        expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+        expect(writeFile.getCall(0).args[1]).to.satisfy((newPackageJson) => newPackageJson.endsWith('\n'));
+
+        readdir.resetHistory();
+        readFile.resetHistory();
+        writeFile.resetHistory();
+
+        const dirPath2 = path.join(__dirname, 'data', 'underscore_field_no_end_newline');
+        const filePath2 = path.join(dirPath2, 'module', 'package.json');
+        const promise2 = removeNPMAbsolutePaths(dirPath2);
+        const results2 = await expect(promise2).be.fulfilled;
+        expect(results2).to.be.an('array').that.have.lengthOf(3);
+        const fileResults2 = results2.find((result) => result.filePath === filePath2);
+        expect(fileResults2).to.include({ success: true, rewritten: true });
+        expect(fileResults2.err).to.not.exist;
+        expect(stat).to.have.been.called;
+        expect(readdir).to.have.been.called;
+        expect(readFile).to.have.been.calledOnce.and.calledWith(filePath2);
+        expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath2);
+        expect(writeFile.getCall(0).args[1]).to.satisfy((newPackageJson) => !newPackageJson.endsWith('\n'));
+      });
+
       describe('force', async function () {
         it('doesn\'t rewrite pacakge.json if doesn\'t contain _fields and force option isn\'t passed', async function () {
           const dirPath = path.join(__dirname, 'data', 'no_underscore_fields');
@@ -258,6 +292,38 @@ describe('removeNPMAbsolutePaths.js', async function () {
         expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
         const packageJson = JSON.parse(writeFile.getCall(0).args[1]);
         expect(Object.keys(packageJson).find((key) => key[0] === '_')).to.not.exist;
+      });
+
+      it('preserve newline at the end of packa.json if rewriting', async function () {
+        const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
+        const promise = removeNPMAbsolutePaths(filePath);
+        const results = await expect(promise).be.fulfilled;
+        expect(results).to.be.an('array').that.have.lengthOf(1);
+        const fileResults = results.find((result) => result.filePath === filePath);
+        expect(fileResults).to.include({ success: true, rewritten: true });
+        expect(fileResults.err).to.not.exist;
+        expect(stat).to.have.been.called;
+        expect(readdir).to.not.have.been.called;
+        expect(readFile).to.have.been.calledOnce.and.calledWith(filePath);
+        expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath);
+        expect(writeFile.getCall(0).args[1]).to.satisfy((newPackageJson) => newPackageJson.endsWith('\n'));
+
+        readdir.resetHistory();
+        readFile.resetHistory();
+        writeFile.resetHistory();
+
+        const filePath2 = path.join(__dirname, 'data', 'underscore_field_no_end_newline', 'module', 'package.json');
+        const promise2 = removeNPMAbsolutePaths(filePath2);
+        const results2 = await expect(promise2).be.fulfilled;
+        expect(results2).to.be.an('array').that.have.lengthOf(1);
+        const fileResults2 = results2.find((result) => result.filePath === filePath2);
+        expect(fileResults2).to.include({ success: true, rewritten: true });
+        expect(fileResults2.err).to.not.exist;
+        expect(stat).to.have.been.called;
+        expect(readdir).to.not.have.been.called;
+        expect(readFile).to.have.been.calledOnce.and.calledWith(filePath2);
+        expect(writeFile).to.have.been.calledOnce.and.calledWith(filePath2);
+        expect(writeFile.getCall(0).args[1]).to.satisfy((newPackageJson) => !newPackageJson.endsWith('\n'));
       });
 
       describe('force', async function () {

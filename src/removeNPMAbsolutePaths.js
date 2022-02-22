@@ -1,7 +1,9 @@
 'use strict';
 
 const path = require('path');
-const { stat, readdir, readFile, writeFile } = require('fs').promises;
+const {
+  stat, readdir, readFile, writeFile,
+} = require('fs').promises;
 
 const errno = require('./errno');
 
@@ -47,7 +49,7 @@ async function processFile(filePath, opts) {
 
     if (shouldWriteFile || opts.force) {
       try {
-        await writeFile(filePath, JSON.stringify(obj, null, '  '));
+        await writeFile(filePath, `${JSON.stringify(obj, null, '  ')}${data.endsWith('\n') ? '\n' : ''}`);
       } catch (err) {
         throw new ProcessingError(`Can't write processed file to "${filePath}"`, err);
       }
