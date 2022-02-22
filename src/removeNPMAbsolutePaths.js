@@ -98,26 +98,23 @@ async function processDir(dirPath, opts) {
         return arr;
       }
 
-      if (value.constructor === Array) {
-        return arr.concat(value);
+      if (Array.isArray(value)) {
+        return [...arr, ...value];
       }
 
-      arr.push(value);
-      return arr;
+      return [...arr, value];
     }, [{ dirPath, success: true }]);
   } catch (err) {
     return [{ dirPath, err, success: false }];
   }
 }
 
-async function removeNPMAbsolutePaths(filePath, opts) {
-  opts = opts || {}; // eslint-disable-line no-param-reassign
-
+async function removeNPMAbsolutePaths(filePath, opts = {}) {
   if (!filePath) {
     throw new ProcessingError('Missing path.\nThe first argument should be the path to a directory or a package.json file.');
   }
 
-  if (opts.fields && (opts.fields.constructor !== Array || opts.fields.length === 0)) {
+  if (opts.fields && (!Array.isArray(opts.fields) || opts.fields.length === 0)) {
     throw new ProcessingError('Invalid option: fields.\nThe fields option should be an array cotaining the names of the specific fields that should be removed.');
   }
 

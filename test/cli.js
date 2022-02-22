@@ -52,7 +52,7 @@ describe('cli', function () {
       });
 
       it('set the fields option if --field flag and some fields are passed', function () {
-        const args = [path, '--fields'].concat(testFields);
+        const args = [path, '--fields', ...testFields];
         const parsedArgs = cli.parseArguments(args);
         expect(parsedArgs.path).to.equal(path);
         expect(parsedArgs.opts.fields).to.deep.equal(testFields);
@@ -61,8 +61,8 @@ describe('cli', function () {
     });
 
     it('ignore unknown arguments', function () {
-      const args1 = [path, unknownArg1, '--force', unknownArg2, '--fields'].concat(testFields);
-      const args2 = [path, '--fields'].concat(testFields).concat(['--force', unknownArg1, unknownArg2]);
+      const args1 = [path, unknownArg1, '--force', unknownArg2, '--fields', ...testFields];
+      const args2 = [path, '--fields', ...testFields, '--force', unknownArg1, unknownArg2];
       const parsedArgs1 = cli.parseArguments(args1);
       const parsedArgs2 = cli.parseArguments(args2);
       expect(parsedArgs1.ignored).to.deep.equal(parsedArgs2.ignored);
@@ -70,8 +70,8 @@ describe('cli', function () {
     });
 
     it('produce the same result regardless of the arguments passed', function () {
-      const args1 = [path, unknownArg1, '--force', unknownArg2, '--fields'].concat(testFields);
-      const args2 = [path, '--fields'].concat(testFields).concat(['--force', unknownArg1, unknownArg2]);
+      const args1 = [path, unknownArg1, '--force', unknownArg2, '--fields', ...testFields];
+      const args2 = [path, '--fields', ...testFields, '--force', unknownArg1, unknownArg2];
       const parsedArgs1 = cli.parseArguments(args1);
       const parsedArgs2 = cli.parseArguments(args2);
       expect(parsedArgs1).to.deep.equal(parsedArgs2);

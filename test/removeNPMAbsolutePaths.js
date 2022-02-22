@@ -209,7 +209,7 @@ describe('removeNPMAbsolutePaths.js', function () {
         });
 
         it('return error if fields option is passed but is empty', function () {
-          const dirPath = path.join(__dirname, 'data' ,'underscore_fields');
+          const dirPath = path.join(__dirname, 'data', 'underscore_fields');
           const opts = {
             fields: [],
           };
@@ -324,7 +324,7 @@ describe('removeNPMAbsolutePaths.js', function () {
 
       describe('fields', function () {
         it('return error if fields option is passed but is not an array', function () {
-          const filePath = path.join(__dirname, 'data' , 'underscore_fields' , 'module' , 'package.json');
+          const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
           const opts = {
             fields: 'string_value',
           };
