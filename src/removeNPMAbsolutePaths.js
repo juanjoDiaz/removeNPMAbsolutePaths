@@ -1,16 +1,9 @@
 'use strict';
 
 const path = require('path');
-const {
-  stat, readdir, readFile, writeFile,
-} = require('fs');
-const { promisify } = require('util');
-const errno = require('./errno');
+const { stat, readdir, readFile, writeFile } = require('fs').promises;
 
-const statAsync = promisify(stat);
-const readdirAsync = promisify(readdir);
-const readFileAsync = promisify(readFile);
-const writeFileAsync = promisify(writeFile);
+const errno = require('./errno');
 
 class ProcessingError extends Error {
   constructor(message, err) {
@@ -21,7 +14,7 @@ class ProcessingError extends Error {
 
 async function getStats(filePath) {
   try {
-    return await statAsync(filePath);
+    return await stat(filePath);
   } catch (err) {
     throw new ProcessingError(`Can't read directory/file at "${filePath}"`, err);
   }
@@ -31,7 +24,7 @@ async function processFile(filePath, opts) {
   try {
     let data;
     try {
-      data = await readFileAsync(filePath, 'utf8');
+      data = await readFile(filePath, 'utf8');
     } catch (err) {
       throw new ProcessingError(`Can't read file at "${filePath}"`, err);
     }
@@ -54,7 +47,7 @@ async function processFile(filePath, opts) {
 
     if (shouldWriteFile || opts.force) {
       try {
-        await writeFileAsync(filePath, JSON.stringify(obj, null, '  '));
+        await writeFile(filePath, JSON.stringify(obj, null, '  '));
       } catch (err) {
         throw new ProcessingError(`Can't write processed file to "${filePath}"`, err);
       }
@@ -72,7 +65,7 @@ async function processDir(dirPath, opts) {
   try {
     let files;
     try {
-      files = await readdirAsync(dirPath);
+      files = await readdir(dirPath);
     } catch (err) {
       throw new ProcessingError(`Can't read directory at "${dirPath}"`, err);
     }

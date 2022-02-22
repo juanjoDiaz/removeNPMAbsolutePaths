@@ -30,10 +30,10 @@ describe('removeNPMAbsolutePaths.js', async function () {
     let writeFile;
 
     before(function () {
-      stat = sinon.spy(fs, 'stat');
-      readdir = sinon.spy(fs, 'readdir');
-      readFile = sinon.spy(fs, 'readFile');
-      writeFile = sinon.stub(fs, 'writeFile');
+      stat = sinon.spy(fs.promises, 'stat');
+      readdir = sinon.spy(fs.promises, 'readdir');
+      readFile = sinon.spy(fs.promises, 'readFile');
+      writeFile = sinon.stub(fs.promises, 'writeFile');
       clearCachedModuleSoNewMocksWork();
     });
 
@@ -42,7 +42,7 @@ describe('removeNPMAbsolutePaths.js', async function () {
       readdir.resetHistory();
       readFile.resetHistory();
       writeFile.resetHistory();
-      writeFile.yields(null);
+      writeFile.resolves(null);
     });
 
     after(function () {
@@ -350,10 +350,10 @@ describe('removeNPMAbsolutePaths.js', async function () {
       let writeFile;
 
       before(function () {
-        stat = sinon.spy(fs, 'stat');
-        readdir = sinon.stub(fs, 'readdir');
-        readFile = sinon.spy(fs, 'readFile');
-        writeFile = sinon.spy(fs, 'writeFile');
+        stat = sinon.spy(fs.promises, 'stat');
+        readdir = sinon.stub(fs.promises, 'readdir');
+        readFile = sinon.spy(fs.promises, 'readFile');
+        writeFile = sinon.spy(fs.promises, 'writeFile');
         clearCachedModuleSoNewMocksWork();
       });
 
@@ -373,7 +373,7 @@ describe('removeNPMAbsolutePaths.js', async function () {
 
       it('return error if can\'t read file', async function () {
         const err = new Error('Can\'t read directory.');
-        readdir.yields(err);
+        readdir.rejects(err);
         clearCachedModuleSoNewMocksWork();
         const dirPath = path.join(__dirname, 'data', 'underscore_fields');
         const promise = removeNPMAbsolutePaths(dirPath);
@@ -399,10 +399,10 @@ describe('removeNPMAbsolutePaths.js', async function () {
       let writeFile;
 
       before(function () {
-        stat = sinon.spy(fs, 'stat');
-        readdir = sinon.spy(fs, 'readdir');
-        readFile = sinon.stub(fs, 'readFile');
-        writeFile = sinon.stub(fs, 'writeFile');
+        stat = sinon.spy(fs.promises, 'stat');
+        readdir = sinon.spy(fs.promises, 'readdir');
+        readFile = sinon.stub(fs.promises, 'readFile');
+        writeFile = sinon.stub(fs.promises, 'writeFile');
       });
 
       beforeEach(function () {
@@ -421,7 +421,7 @@ describe('removeNPMAbsolutePaths.js', async function () {
 
       it('return error if can\'t read file', async function () {
         const err = new Error('Can\'t read file.');
-        readFile.yields(err);
+        readFile.rejects(err);
         clearCachedModuleSoNewMocksWork();
         const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(filePath);
@@ -447,10 +447,10 @@ describe('removeNPMAbsolutePaths.js', async function () {
       let writeFile;
 
       before(function () {
-        stat = sinon.spy(fs, 'stat');
-        readdir = sinon.spy(fs, 'readdir');
-        readFile = sinon.spy(fs, 'readFile');
-        writeFile = sinon.stub(fs, 'writeFile');
+        stat = sinon.spy(fs.promises, 'stat');
+        readdir = sinon.spy(fs.promises, 'readdir');
+        readFile = sinon.spy(fs.promises, 'readFile');
+        writeFile = sinon.stub(fs.promises, 'writeFile');
       });
 
       beforeEach(function () {
@@ -469,7 +469,7 @@ describe('removeNPMAbsolutePaths.js', async function () {
 
       it('return error if can\'t write to file', async function () {
         const err = new Error('Can\'t write to file.');
-        writeFile.yields(err);
+        writeFile.rejects(err);
         clearCachedModuleSoNewMocksWork();
         const filePath = path.join(__dirname, 'data', 'underscore_fields', 'module', 'package.json');
         const promise = removeNPMAbsolutePaths(filePath);
