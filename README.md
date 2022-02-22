@@ -1,5 +1,5 @@
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![Node.js CI][ci-image]][ci-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 [![Downloads][downloads-image]][downloads-url]
 
@@ -65,8 +65,8 @@ MIT
 
 [npm-image]: https://img.shields.io/npm/v/removeNPMAbsolutePaths.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/removeNPMAbsolutePaths
-[travis-image]: https://img.shields.io/travis/juanjoDiaz/removeNPMAbsolutePaths/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/juanjoDiaz/removeNPMAbsolutePaths
+[ci-image]: https://github.com/juanjoDiaz/removeNPMAbsolutePaths/actions/workflows/on-push.yaml/badge.svg
+[ci-url]: https://github.com/juanjoDiaz/removeNPMAbsolutePaths/actions/workflows/on-push.yaml
 [coveralls-image]: https://img.shields.io/coveralls/juanjoDiaz/removeNPMAbsolutePaths/master.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/github/juanjoDiaz/removeNPMAbsolutePaths?branch=master
 [downloads-image]: https://img.shields.io/npm/dm/removeNPMAbsolutePaths.svg?style=flat-square
